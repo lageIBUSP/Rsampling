@@ -1,0 +1,32 @@
+---
+title: "RRR: Reproduzindo o Resampling no R"
+author: "Paulo Inácio Prado"
+date: "Junho de 2015"
+output: rmarkdown::html_vignette
+	      fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+
+
+## Instalação
+O Rsampling está hospedado no GitHub. Para instalá-lo use o pacote devtools:
+
+```r{installation}
+library(devtools)
+install_github('sads', 'pilab', 'Rsampling')
+```
+
+## Exemplos
+
+###
+
+###
+
+###
+
+###
+
