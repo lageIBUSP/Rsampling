@@ -18,6 +18,7 @@
 #' Kondrat, H. 2012. Estímulos químicos de folhas novas promovem recrutamento eficiente de formigas associadas à embaúba
 #' \emph{Cecropia glaziovi} (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
+#' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Hebert.pdf}
 "azteca"
 
 
@@ -39,6 +40,7 @@
 #' Mello, T.J. 2012. Infestação por lianas e comportamento de poda por formigas em \emph{Cecropia}
 #' (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
+#' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Thayna.pdf}
 "embauba"
 
 #' Preference of hunting spiders by hairy leaves
@@ -53,7 +55,7 @@
 #' }
 #' @section Details:
 #' Spiders of the genus \emph{Peucetia} do not make webs and hunt actively on the vegetation.
-#' The data is from ax experiment to test if their preference for hairy leaves that can stick their prey.
+#' The data is from an experiment to test if spiders prefer to stay in hairy leaves, that can stick their prey.
 #' The spiders were kept in Petri dishes that had half of lower plate covered with hairy leaves.
 #' The other half was covered by leaves without trichomes.
 #' The placement of each spider was recorded 6 times at each 30 min. 
@@ -61,6 +63,7 @@
 #' Werneck, R.T. 2010. Lar, viscoso lar. Experimento de seleção de habitat e forrageio de aranhas
 #' em plantas com tricomas glandulares. Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.A. Oliveira, eds.). Universidade de São Paulo, São Paulo.
+#' \url{http://ecologia.ib.usp.br/curso/2010/pages/pdf/PI/relatorios/rachel.pdf}
 "peucetia"
 
 
@@ -74,7 +77,8 @@
 #' \item{with.vines}{distance traveled in a improvised wind tunnel (cm)}
 #' }
 #' @source
-#' Cunha, T.J. 2011. Alometria de frutos alados e influência da frugivoria na capacidade de dispersão
+#' Cunha, T.J. 2012. Alometria de frutos alados e influência da frugivoria na capacidade de dispersão
 #' de frutos de \emph{Stigmaphyllon} sp. (Malpighiaceae). Curso de campo "Ecologia da Mata Atlântica"
-#' (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
+#' (G. Machado, P.I. Prado & A.M.Z. Martini eds.). Universidade de São Paulo, São Paulo.
+#' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Tauana.pdf}
 "samaras"
