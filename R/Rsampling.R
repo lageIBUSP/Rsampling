@@ -31,8 +31,8 @@
 #' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
 #' \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units", "within_rows", "within_columns"),
-                       dataframe, statistics, ntrials=10000, simplify=TRUE, ...){
+                       dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", ...){
     f1 <- match.fun(match.arg(type))
-    rlply(ntrials, statistics(f1(dataframe, ...)), .progress="text") %>%
+    rlply(ntrials, statistics(f1(dataframe, ...)), .progress = progress) %>%
         {if(simplify) simplify2array(.) else .}
 }

@@ -2,28 +2,41 @@
 title: "RRR: Reproduzindo o Resampling com Rsampling"
 author: "Paulo Inácio Prado"
 date: "Junho de 2015"
-output: rmarkdown::html_vignette
-	      fig_caption: yes
+output:
+  rmarkdown::html_vignette:
+    fig_width: 5
+    fig_height: 5
+    fig_caption: true
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
-
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+    collapse=TRUE,
+    comment = NA,
+    prompt = TRUE
+)
+```
 
 ## Instalação
 O Rsampling está hospedado no GitHub.
 Para instalá-lo use a função `install_github` do pacote devtools:
 
-```r{installation}
+```{r installation, eval=FALSE}
 library(devtools)
 install_github(repos = 'Rsampling', username = 'lageIBUSP')
 ```
+E então carregue o pacote
 
-## Exemplos
+```{r load library}
+library(Rsampling)
+```
 
-### Embaralhando uma coluna para testar diferença entre grupos
+
+## Embaralhando dentro de uma coluna para testar diferença entre grupos
 
 O dataframe `embauba` tem os dados de presença
 e ausência de lianas em embaúbas de dois morfotipos (brancas e vermelhas).
@@ -35,18 +48,18 @@ summary(embauba)
 Para mais detalhes sobre os dados e o estudo que os produziu consulte a
 página de ajuda (`?embauba`).
 
-#### Hipótese do estudo
-Uma das hipóteses deste estudo é
-que embaúbas vermelhas seriam menos infestadas por lianas do que as
+### Hipótese do estudo
+A hipótese deste estudo é
+que as formigas removem lianas das embaúbas onde estão suas colônias.
+A previoa é que embaúbas vermelhas seriam menos infestadas por lianas do que as
 brancas, por abrigarem colônias de formigas mais frequentemente.
-De fato
-esta diferença ocorreu nas proporções de árvores
+De fato, esta diferença é observada nas proporções de árvores
 infestadas na amostra:
 
 ```{r proporcao de infestacao por morfo de embauba}
 tapply(embauba$with.vines, embauba$morphotype, mean)
 ```
-#### Hipótese nula
+### Hipótese nula
 A hipótese nula é de que as proporções de infestação são iguais
 na população de onde vieram as amostras.
 Sob esta hipótese, uma liana tem a mesma chance de estar em uma embaúba
@@ -55,7 +68,7 @@ Simulamos a hipótese nula
 embaralhando as presenças de lianas entre plantas
 na tabela de dados.
 
-#### Estatística de interesse
+### Estatística de interesse
 A cada simulação temos que calcular nossa
 **estatística de interesse**, que é a
 a diferença de infestação
@@ -70,17 +83,18 @@ emb.ei <- function(dataframe){
 ## Verificando
 emb.ei(embauba)
 ```
-#### Distribuição da estatística sob a hipótese nula
+### Distribuição da estatística sob a hipótese nula
 
 Em seguida fazemos a simulação com a função
 `Rsampling`:
 
-```{r embaubas resampling}
+```{r embaubas resampling, results="hide"}
 emb.r <- Rsampling(type = "normal", dataframe = embauba,
                    statistics = emb.ei, cols = 2, ntrials = 1000)
 ```
 **O que significa este comando?**
-* `type = "normal` escolhe uma randomização de todos os elementos
+
+* `type = "normal"` escolhe uma randomização de todos os elementos
 		(mais abaixo você verá outros tipos de randomização).
 * `dataframe = embauba` indica a tabela com os dados
 * `statistics = emb.ei` indica a função que calcula a(s)
@@ -92,16 +106,14 @@ emb.r <- Rsampling(type = "normal", dataframe = embauba,
 A distribuição das estatística de interesse
 na simulação mostra nem inclui o valor observado.
 
-```{r embaubas distribuicao nula, 
-legend="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas
-com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas.
-A linha vermelha indica a diferença observada."}
+```{r embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada."}
 hist(emb.r, xlim=c(-0.5, 0.5),
      main = "Distribuição da estatística de interesse sob H0",
      xlab = "Estatística de interesse")
 abline(v = emb.ei(embauba), lty=2, col="red")
 ```
-#### Decisão: rejeitamos a hipótese nula?
+
+### Decisão: rejeitamos a hipótese nula?
 
 Seguindo o padrão das ciências biológicas,
 adotamos o critério de rejeitar
@@ -112,13 +124,14 @@ for menor que 5%.
 Este critério é verificado com um teste lógico no
 R:
 
-```{r embaubas teste}, 
-(sum(emb.r >= emb.ei(embauba))/1000) < 0.05
+```{r embaubas teste} 
+sum(emb.r >= emb.ei(embauba))/1000 < 0.05
 ```
+
 **Conclusão:** rejeita-se a hipótese nula (p<0,05).
 
 
-### Embaralhando linhas para testar diferenças dentro de pares
+## Embaralhando dentro de linhas para testar diferenças dentro de pares
 
 O dataframe `azteca` tem o número de formigas *Azteca* sp
 recrutadas por extratos aquosos de folhas novas e velhas de
@@ -130,23 +143,23 @@ summary(azteca)
 ```
 Saiba mais sobre os dados em sua página de ajuda (`?azteca`).
 
-#### Hipótese do estudo
+### Hipótese do estudo
 
-Uma das hipóteses deste estudo é
+A hipótese do estudo é que
+o recrutamento é mais intenso quando uma
+folha nova é danificada.
+A previsão para o experimento é
 que o recrutamento por extrato de folhas novas
-seja maior. Essa tendência ocorreu
-no dados obtidos no experimento:
+seja maior, o que ocorreu:
 
-```{r pairplot azteca, 
-legend = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas.
-Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas.
-As linhas ligam folhas do mesmo par experimental."}
+```{r pairplot azteca, fig.cap = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas. Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas. As linhas ligam folhas do mesmo par experimental."}
 pairs.plot(azteca$extract.new, azteca$extract.old,
            groups.names=c("Folha nova","Folha velha"),
            ylab="N de formigas recrutadas",
            xlab="Tipo de extrato aplicado")
 ```
-#### Hipótese nula
+
+### Hipótese nula
 A hipótese nula é de que o recrutamento provocado pelos estratos
 é o mesmo. Note que para controlar outras fontes de variação o
 experimento foi pareado.
@@ -154,8 +167,7 @@ Então para simular a hipótese nula temos que
 embaralhar o número de formigas recrutadas **dentro** de cada par de
 folhas.
 
-
-#### Estatística de interesse
+### Estatística de interesse
 A cada simulação temos que calcular nossa
 **estatística de interesse**, que é a
 média da diferença das folhas de cada par.
@@ -169,22 +181,23 @@ azt.ei <- function(dataframe){
 ## Valor observado
 azt.ei(azteca)
 ```
+
 No experimento o extrato de folhas novas recrutou em média `r
 round(azt.ei(azteca),1)`
-formigas que o extreto de folha velha, em cada par.
+formigas que o extrato de folha velha, em cada par.
 
-#### Distribuição da estatística sob a hipótese nula
+### Distribuição da estatística sob a hipótese nula
 
 Como os pares são linhas em nosso dataframe,
 simulamos a hipótese nula embaralhando os valores
 dentro de cada linha:
 
-```{r embaubas resampling}
+```{r azteca resampling, results="hide"}
 azt.r <- Rsampling(type = "within_rows", dataframe = azteca,
                    statistics = azt.ei, cols = 2:3, ntrials = 1000)
 ```
 
-Mudamos o argumento `type = "within_rows`, para indicar que
+Mudamos o argumento `type = "within_rows"`, para indicar que
 os valores devem ser embaralhados dentro da linhas.
 O argumento `cols = 2:3` indica as colunas do dataframe
 que têm as contagens.
@@ -192,116 +205,21 @@ que têm as contagens.
 Uma diferença igual ou maior que a observada foi muito rara
 na distribuição da estatística de interesse:
 
-```{r embaubas distribuicao nula, 
-legend="Distribuição das diferenças do número de formigas recrutadas
-por extratos de folhas novas e velhas de
-embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença.
-A linha vermelha indica a diferença observada."}
+```{r azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada."}
 hist(azt.r,
      main = "Distribuição da estatística de interesse sob H0",
      xlab = "Estatística de interesse")
 abline(v = azt.ei(azteca), lty=2, col="red")
 ```
-#### Decisão: rejeitamos a hipótese nula?
+
+### Decisão: rejeitamos a hipótese nula?
 
 Aplicando nosso critério de significância:
 
-```{r azteca teste}, 
-(sum(azt.r >= azt.ei(azteca))/1000) < 0.05
+```{r azteca teste} 
+sum(azt.r >= azt.ei(azteca))/1000 < 0.05
 ```
+
 **Conclusão:** rejeita-se a hipótese nula (p<0,05).
 
-
-### Embaralhando linhas para testar diferenças dentro de pares
-
-O dataframe `azteca` tem o número de formigas *Azteca* sp
-recrutadas por extratos aquosos de folhas novas e velhas de
-embaúbas.
-
-```{r inspecionando objeto azteca}
-head(azteca)
-summary(azteca)
-```
-Saiba mais sobre os dados em sua página de ajuda (`?azteca`).
-
-#### Hipótese do estudo
-
-Uma das hipóteses deste estudo é
-que o recrutamento por extrato de folhas novas
-seja maior. Essa tendência ocorreu
-no dados obtidos no experimento:
-
-```{r pairplot azteca, 
-legend = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas.
-Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas.
-As linhas ligam folhas do mesmo par experimental."}
-pairs.plot(azteca$extract.new, azteca$extract.old,
-           groups.names=c("Folha nova","Folha velha"),
-           ylab="N de formigas recrutadas",
-           xlab="Tipo de extrato aplicado")
-```
-#### Hipótese nula
-A hipótese nula é de que o recrutamento provocado pelos estratos
-é o mesmo. Note que para controlar outras fontes de variação o
-experimento foi pareado.
-Então para simular a hipótese nula temos que
-embaralhar o número de formigas recrutadas **dentro** de cada par de
-folhas.
-
-
-#### Estatística de interesse
-A cada simulação temos que calcular nossa
-**estatística de interesse**, que é a
-média da diferença das folhas de cada par.
-Uma função para isso:
-
-```{r estatistica de interesse azteca}
-azt.ei <- function(dataframe){
-    diferencas <- with(dataframe, extract.new - extract.old)
-    mean(diferencas)
-}
-## Valor observado
-azt.ei(azteca)
-```
-No experimento o extrato de folhas novas recrutou em média `r
-round(azt.ei(azteca),1)`
-formigas que o extreto de folha velha, em cada par.
-
-#### Distribuição da estatística sob a hipótese nula
-
-Como os pares são linhas em nosso dataframe,
-simulamos a hipótese nula embaralhando os valores
-dentro de cada linha:
-
-```{r azteca resampling}
-azt.r <- Rsampling(type = "within_rows", dataframe = azteca,
-                   statistics = azt.ei, cols = 2:3, ntrials = 1000)
-```
-
-Mudamos o argumento `type = "within_rows`, para indicar que
-os valores devem ser embaralhados dentro da linhas.
-O argumento `cols = 2:3` indica as colunas do dataframe
-que têm as contagens.
-
-Uma diferença igual ou maior que a observada foi muito rara
-na distribuição da estatística de interesse:
-
-```{r azteca distribuicao nula, 
-legend="Distribuição das diferenças do número de formigas recrutadas
-por extratos de folhas novas e velhas de
-embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença.
-A linha vermelha indica a diferença observada."}
-hist(azt.r,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse")
-abline(v = azt.ei(azteca), lty=2, col="red")
-```
-#### Decisão: rejeitamos a hipótese nula?
-
-Aplicando nosso critério de significância:
-
-```{r azteca teste}, 
-(sum(azt.r >= azt.ei(azteca))/1000) < 0.05
-```
-**Conclusão:** rejeita-se a hipótese nula (p<0,05).
 
