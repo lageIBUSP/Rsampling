@@ -33,7 +33,7 @@
 #' }
 #' @section Details:
 #' Two morphotypes of Cecropia trees differ in the occupancy by ant colonies.
-#' Ants attacks and drive out other insects that get to the trees.
+#' Ants attack and drive out other insects that get to the trees.
 #' To test if this protection also affect infestation by vines, trees of similar size of both morphs
 #' were sampled and inspected for the presence of vines.
 #' @source
@@ -67,18 +67,23 @@
 "peucetia"
 
 
-#' Distance traveled by winged fruits
+#' Allometry in mangroove trees
 #'
-#' Distance traveled in a wind tunnel by samaras with different area to mass ratios.
+#' Canopy to height ratio and variables of root area in mangrove trees sampled in two soil types.
 #'
-#' @format A data frame with 30 rows (fruits) and 2 variables:
+#' @format A data frame with 24 rows (trees) and 4 variables:
 #' \describe{
-#' \item{load}{wing load, the mass/area ratio (g/cm2)}
-#' \item{with.vines}{distance traveled in a improvised wind tunnel (cm)}
+#' \item{soil.instability}{soil type according to instability; factor with two levels (high / medium)}
+#' \item{canopy.trunk}{ratio between canopy and trunk area, both in m2, numeric}
+#' \item{root}{area covered by aerial roots, numeric (m2)}
+#' \item{n.roots}{numebr of aerial roots, integer}
 #' }
+#' @section Details:
+#' Data from a field practical exercise to test if mangrove trees in more unstable soil
+#' allocates more biomass in supporting roots.
 #' @source
-#' Cunha, T.J. 2012. Alometria de frutos alados e influência da frugivoria na capacidade de dispersão
-#' de frutos de \emph{Stigmaphyllon} sp. (Malpighiaceae). Curso de campo "Ecologia da Mata Atlântica"
+#' Prado, A. \emph{et al}. 2013. Variações na morfologia de sustentação em \emph{Rhizophora mangle} (Rizophoraceae) em diferentes
+#' condições de inundação do solo. Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado, P.I. Prado & A.M.Z. Martini eds.). Universidade de São Paulo, São Paulo.
-#' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Tauana.pdf}
-"samaras"
+#' \url{http://ecologia.ib.usp.br/curso/2013/pdf/PO4-2.pdf}
+"rhyzophora"
