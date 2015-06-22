@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
     collapse=TRUE,
     comment = NA,
     prompt = TRUE
-)
+    )
 ```
 
 ## Apresentação
@@ -63,7 +63,7 @@ Para instalá-lo use a função `install_github` do pacote devtools:
 
 ```{r installation, eval=FALSE}
 library(devtools)
-install_github(repos = 'Rsampling', username = 'lageIBUSP')
+install_github(repo = 'lageIBUSP/Rsampling')
 ```
 E então carregue com
 
@@ -188,7 +188,7 @@ que o recrutamento por extrato de folhas novas
 seja maior, o que ocorreu:
 
 ```{r pairplot azteca, fig.cap = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas. Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas. As linhas ligam folhas do mesmo par experimental."}
-pairs.plot(azteca$extract.new, azteca$extract.old,
+splot(azteca$extract.new, azteca$extract.old,
            groups.names=c("Folha nova","Folha velha"),
            ylab="N de formigas recrutadas",
            xlab="Tipo de extrato aplicado")

@@ -58,7 +58,7 @@ Only the placement of rows and columns in the dataframe change. The position of 
 All functions assemble the randomized values in a dataframe
 of the same configuration of the original. Columns that
 were not selected to be randomized with argument \code{cols} are then
-to the resulting dataframe.
+bind to the resulting dataframe.
 }
 
 \section{References}{

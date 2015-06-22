@@ -14,7 +14,10 @@ Description: Resampling Stats (http://www.resample.com) is an add-in for running
 	     (probability of Type I error).
 	     This package intends to translate this logic for R for teaching purposes.
 	     Keeping the original workflow is favoured over performance. 
-Depends: R (>= 3.0.0)
+Depends: R (>= 3.0.0),
+	 plyr,
+	 dplyr,
+	 tidyr
 Imports: 
 	plyr,
 	dplyr,

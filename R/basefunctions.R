@@ -28,7 +28,7 @@
 #' All functions assemble the randomized values in a dataframe
 #' of the same configuration of the original. Columns that
 #' were not selected to be randomized with argument \code{cols} are then
-#' to the resulting dataframe.
+#' bind to the resulting dataframe.
 #'
 #'
 #' @return a dataframe with the same structure of those input in \code{dataframe} with values randomized accordingly.
