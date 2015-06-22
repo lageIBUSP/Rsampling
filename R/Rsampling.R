@@ -36,3 +36,5 @@ Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units",
     rlply(ntrials, statistics(f1(dataframe, ...)), .progress = progress) %>%
         {if(simplify) simplify2array(.) else .}
 }
+
+

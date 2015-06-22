@@ -6,7 +6,7 @@
 \usage{
 Rsampling(type = c("normal_rand", "rows_as_units", "columns_as_units",
   "within_rows", "within_columns"), dataframe, statistics, ntrials = 10000,
-  simplify = TRUE, ...)
+  simplify = TRUE, progress = "text", ...)
 }
 \arguments{
 \item{type}{character; the name of the randomization function to be applied to \code{dataframe}.

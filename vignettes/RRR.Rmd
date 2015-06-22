@@ -21,20 +21,55 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Apresentação
+
+Este roteiro é uma introdução ao pacote **Rsampling**, que reproduz em R as funções
+do programa *Resampling Stats*
+(http://www.resample.com/).
+
+Essas funções são usadas em um ciclo de trabalho que resume a lógica
+dos testes de significância:
+
+1. Defina uma estatística de interesse;
+2. Defina a hipótese nula;
+3. Obtenha a distribuição da estatística de interesse sob a hipótese nula;
+4. Se a probabilidade da estatística de interesse observada ocorrer sob a hipótese nula
+  é menor do que um valor crítico rejeite a hipótese nula.
+
+A ideia do *Resampling Stats* é facilitar o entendimento dessa lógica,
+fazendo o usuário executar cada um dos passos em um planilha,
+com o auxílio de algumas macros. Um elemento muito efetivo para este
+aprendizado é que a hipótese nula é simulada por aleatorização dos dados.
+Isso também dá muita flexibilidade aos testes que podem ser feitos.
+O manual do *Resampling Stats* é uma excelente introdução a esta metodologia,
+e à lógica dos testes de significância [^2].
+
+O objetivo do pacote **Rsampling**
+é possibilitar este mesmo treinamento no R.
+Assim, privilegiamos fidelidade à lógica
+original e à didática em eventual detrimento de
+desempenho computacional.
+
+As seções após instruções de instalação
+são exemplos de uso mais simples e comuns
+do **Rsampling**. Consulte também as páginas
+de ajuda do pacote para conhecer todas
+as funcionalidades.
+
+
 ## Instalação
-O Rsampling está hospedado no GitHub.
+O pacote **Rsampling** está hospedado no GitHub.
 Para instalá-lo use a função `install_github` do pacote devtools:
 
 ```{r installation, eval=FALSE}
 library(devtools)
 install_github(repos = 'Rsampling', username = 'lageIBUSP')
 ```
-E então carregue o pacote
+E então carregue com
 
 ```{r load library}
 library(Rsampling)
 ```
-
 
 ## Embaralhando dentro de uma coluna para testar diferença entre grupos
 
@@ -51,7 +86,7 @@ página de ajuda (`?embauba`).
 ### Hipótese do estudo
 A hipótese deste estudo é
 que as formigas removem lianas das embaúbas onde estão suas colônias.
-A previoa é que embaúbas vermelhas seriam menos infestadas por lianas do que as
+A previsão é que embaúbas vermelhas seriam menos infestadas por lianas do que as
 brancas, por abrigarem colônias de formigas mais frequentemente.
 De fato, esta diferença é observada nas proporções de árvores
 infestadas na amostra:
@@ -104,7 +139,7 @@ emb.r <- Rsampling(type = "normal", dataframe = embauba,
 * `ntrials = 1000` indica o número de repetições da simulação.
 
 A distribuição das estatística de interesse
-na simulação mostra nem inclui o valor observado.
+na simulação nem incluiu o valor observado:
 
 ```{r embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada."}
 hist(emb.r, xlim=c(-0.5, 0.5),
@@ -182,9 +217,8 @@ azt.ei <- function(dataframe){
 azt.ei(azteca)
 ```
 
-No experimento o extrato de folhas novas recrutou em média `r
-round(azt.ei(azteca),1)`
-formigas que o extrato de folha velha, em cada par.
+No experimento o extrato de folhas novas recrutou em média
+`r round(azt.ei(azteca),1)` formigas que o extrato de folha velha, em cada par.
 
 ### Distribuição da estatística sob a hipótese nula
 
@@ -198,7 +232,7 @@ azt.r <- Rsampling(type = "within_rows", dataframe = azteca,
 ```
 
 Mudamos o argumento `type = "within_rows"`, para indicar que
-os valores devem ser embaralhados dentro da linhas.
+os valores devem ser embaralhados dentro das linhas.
 O argumento `cols = 2:3` indica as colunas do dataframe
 que têm as contagens.
 
@@ -223,3 +257,209 @@ sum(azt.r >= azt.ei(azteca))/1000 < 0.05
 **Conclusão:** rejeita-se a hipótese nula (p<0,05).
 
 
+## Aleatorização com reposição
+
+O dataframe `peucetia` tem os dados de um experimento de escolha de substrato
+por aranhas do gênero *Peucetia*.
+Vinte e sete aranhas foram mantidas em placas de Petri
+cobertas com dois substratos (folhas com e sem tricomas gladulosos).
+Em seis inspeções a cada placa registrou-se
+se cada aranha estava sobre as folhas com tricomas.
+
+```{r inspecionando objeto peucetia}
+head(peucetia)
+```
+Saiba mais sobre os dados em sua página de ajuda (`?peucetia`).
+
+### Hipótese do estudo
+
+A hipótese do estudo é que
+as aranhas preferem caçar em plantas
+com pêlos glandulosos, onde a captura
+de presas é mais fácil.
+A previsão para o experimento é
+que as aranhas devem estar a maior parte
+do tempo nas folhas com tricomas.
+De fato, a maioria das aranhas esteve
+nas folhas com tricomas em 4 ou mais inspeções:
+
+```{r barplot peucetia, fig.cap = "Número de inspeções em que as 27 aranhas foram registradas em folhas com tricomas, em um experimento de preferência por substratos."}
+## Número de inspeções em que estava em folha com tricomas
+n.insp <- apply(peucetia, 1, sum)
+barplot(table(factor(n.insp, levels=0:6)),
+        xlab="N de inspeções em que estava na folha com tricoma",
+        ylab="N de aranhas")
+
+```
+
+### Hipótese nula
+
+A hipótese nula é de que não há preferência.
+Como metade das placas estavam cobertas com cada
+tipo de folha, a expectativa nula
+é que as aranhas estivessem
+na área coberta por folhas com tricomas em metade das inspeções,
+em média.
+Esta expectativa tem a premissa que cada inspeção
+é um evento independente.
+
+### Estatística de interesse
+A cada simulação temos que calcular nossa
+**estatística de interesse**, que é a
+média do número de inspeções em que as aranhas estavam sobre folhas com tricomas.
+Uma função para isso:
+
+```{r estatistica de interesse peucetia}
+peu.ei <- function(dataframe){
+    mean(apply(dataframe, 1, sum))
+}
+## Valor observado
+peu.ei(peucetia)
+```
+
+As aranhas foram registradas em média `r
+round(peu.ei(peucetia),2)`
+das 6 inspeções na área coberta por folhas com tricomas.
+
+### Distribuição da estatística sob a hipótese nula
+
+Para simular nossa hipótese nula criamos um
+*data frame* com a mesma estrutura, em que cada
+aranha esteja metade das inspeções nas folhas com tricomas
+
+```{r peucetia H0}
+peu.H0 <- matrix( rep(c(TRUE,FALSE), each = 3),
+                 nrow = nrow(peucetia), ncol = ncol(peucetia), byrow=TRUE)
+## Converte em data.frame
+peu.H0 <- data.frame(peu.H0)
+## verificando
+head(peu.H0)
+```
+E agora simulamos a hipótese nula amostrando
+com reposição cada linha [^3]:
+
+```{r peucetia resampling, results="hide"}
+peu.r <- Rsampling(type = "within_rows", dataframe = peu.H0,
+                   statistics = peu.ei, ntrials = 1000, replace=TRUE)
+```
+
+O argumento `replace = TRUE`, indica amostragem com reposição.
+No caso isso equivale a sortear uma posição independente
+para cada aranha a cada inspeção. A probabilidade da aranha estar
+na folha com tricomas é 0,5 a cada sorteio.
+
+Uma média igual ou maior que a observada não ocorreu
+na distribuição da estatística de interesse simulada:
+
+```{r peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada."}
+hist(peu.r,
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
+abline(v = peu.ei(peucetia), lty=2, col="red")
+```
+
+### Decisão: rejeitamos a hipótese nula?
+
+Aplicando nosso critério de significância:
+
+```{r peucetia teste} 
+sum(peu.r >= peu.ei(peucetia))/1000 < 0.05
+```
+
+**Conclusão:** rejeita-se a hipótese nula (p<0,05).
+
+## Uma hipótese nula mais realista?
+
+No exemplo anterior simulamos a hipótese
+nula sorteando uma posição para cada aranha a cada
+inspeção. A premissa é que a posição da aranha
+em uma inspeção não afeta sua posição nas outras,
+ou seja, que as inspeções são
+eventos independentes.
+
+Mas e se há uma correlação temporal na posição das aranhas?
+Isso pode acontecer com aranhas que se movem a uma
+frequência menor que o intervalo entre as
+inspeções. Se isso é verdade, registros seguidos em um
+tipo de folha podem indicar apenas tendência a ficar no
+mesmo lugar, e não preferência. Nesse caso a hipótese
+nula deve manter o número de inspeções em cada tipo
+de folha, alterando apenas o tipo.
+
+### Hipótese nula
+
+A proporção das inspeções em que as aranhas
+permanecem em um dos substratos não depende do
+tipo de substrato (folha com ou sem tricomas).
+
+Portanto a hipótese nula é sobre a independência entre número
+de inspeções e tipo de substrato. Simulamos este cenário
+embaralhando número de ocasiões entre substratos,
+para cada aranha. Para isso vamos criar um *data frame*
+com número de inspeções em cada substrato:
+
+```{r peucetia n de inspeções}
+## N de inspeções em folha com tricoma
+tric <- apply(peucetia, 1, sum)
+## N de inspeções em folha lisa
+lisa <- apply(peucetia, 1, function(x) sum(x==0))
+## Monta o data frame
+peu.H0b <- data.frame(tric=tric, lisa = lisa)
+## Primeiras linhas
+head(peu.H0b)
+```
+
+
+### Estatística de interesse
+
+Uma mesma estatística de interesse pode ser aplicada a
+diferentes hipóteses nulas. Então mantemos a mesma do
+exemplo anterior: média do número de inspeções em que
+as aranhas foram registradas nas folhas com tricomas.
+
+Mas como a o *data frame* que será aleatorizado
+mudou, criamos uma nova função no R para
+calcular a estatística de interesse
+
+```{r peucetia statistics 2}
+peu.ei2 <- function(dataframe) mean(dataframe$tric)
+## Verificando
+peu.ei2(peu.H0b)
+```
+
+
+### Distribuição da estatística de interesse sob a hipótese nula
+
+Simulamos a hipótese nula embaralhando as linhas
+do *data frame* com número de inspeções por substrato:
+
+```{r peucetia resampling 2, results="hide"}
+peu.r2 <- Rsampling(type = "within_rows", dataframe = peu.H0b,
+                   statistics = peu.ei2, ntrials = 1000)
+```
+
+A distribuição nula mudou bastante de forma comparada com a seção anterior.
+Mas uma média igual ou maior que a observada ainda foi muito rara:
+
+```{r peucetia distribuicao nula 2, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato, considerando tendência das aranhas permanecerem onde estão. A linha vermelha indica a média observada."}
+hist(peu.r2,
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
+abline(v = peu.ei(peucetia), lty=2, col="red")
+```
+
+### Decisão: rejeitamos a hipótese nula?
+
+Aplicando nosso critério de significância:
+
+```{r peucetia teste 2} 
+sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
+```
+
+**Conclusão:** rejeita-se a hipótese nula (p<0,05).
+
+
+[^2]: Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
+http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf
+
+[^3]: Há maneiras mais otimizadas de fazer isso, mas esta reproduz a lógica de sorteios de uma urna do *Resampling Stats*

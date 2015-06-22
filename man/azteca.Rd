@@ -14,6 +14,7 @@
 Kondrat, H. 2012. Estímulos químicos de folhas novas promovem recrutamento eficiente de formigas associadas à embaúba
 \emph{Cecropia glaziovi} (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
+\url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Hebert.pdf}
 }
 \usage{
 azteca

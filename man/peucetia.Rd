@@ -13,6 +13,7 @@ for each of 6 sucessive inspections (time 1, 2, ...}
 Werneck, R.T. 2010. Lar, viscoso lar. Experimento de seleção de habitat e forrageio de aranhas
 em plantas com tricomas glandulares. Curso de campo "Ecologia da Mata Atlântica"
 (G. Machado; P.I. Prado & A.A. Oliveira, eds.). Universidade de São Paulo, São Paulo.
+\url{http://ecologia.ib.usp.br/curso/2010/pages/pdf/PI/relatorios/rachel.pdf}
 }
 \usage{
 peucetia
@@ -24,7 +25,7 @@ leaves with or without tricomes.
 \section{Details}{
 
 Spiders of the genus \emph{Peucetia} do not make webs and hunt actively on the vegetation.
-The data is from ax experiment to test if their preference for hairy leaves that can stick their prey.
+The data is from an experiment to test if spiders prefer to stay in hairy leaves, that can stick their prey.
 The spiders were kept in Petri dishes that had half of lower plate covered with hairy leaves.
 The other half was covered by leaves without trichomes.
 The placement of each spider was recorded 6 times at each 30 min.

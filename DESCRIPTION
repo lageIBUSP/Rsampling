@@ -5,7 +5,7 @@ Authors@R: c(
 	   person("Paulo", "Prado", , "prado@ib.usp.br", role = c("aut", "cre")),
 	   person("Fulano", "Detal", , "detal@xxx.br", role = c("aut"))
 	   )
-Description: Resampling Stats (http://www.resample.com) is an add-in for running randomization in Excell worksheets.
+Description: Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excell worksheets.
 	     The workflow is (1) to define a statistic of interest that can be calculated from a data table,
 	     (2) to randomize rows ad/or columns of a data table to simulate a null hypothesis and
 	     (3) and to score the value of the statistic from many randomizations.

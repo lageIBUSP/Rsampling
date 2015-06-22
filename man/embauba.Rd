@@ -13,6 +13,7 @@
 Mello, T.J. 2012. Infestação por lianas e comportamento de poda por formigas em \emph{Cecropia}
 (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
+\url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Thayna.pdf}
 }
 \usage{
 embauba
@@ -23,7 +24,7 @@ Presence/absence data of vines on Ceropia trees of two morphotypes.
 \section{Details}{
 
 Two morphotypes of Cecropia trees differ in the occupancy by ant colonies.
-Ants attacks and drive out other insects that get to the trees.
+Ants attack and drive out other insects that get to the trees.
 To test if this protection also affect infestation by vines, trees of similar size of both morphs
 were sampled and inspected for the presence of vines.
 }

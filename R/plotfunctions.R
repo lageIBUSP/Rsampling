@@ -1,5 +1,13 @@
-
-pairs.plot <- function(p1, p2, destaque=TRUE, cor.dif=c("black","grey"), groups.names=c(1,2), ...){
+#' Spagheti plot
+#'
+#' Quick plot of paired differences, for exploratory purposes.
+#' @param {p1, p2} vectors of paired values; numerical vectors
+#' @param highlight should positive and negative differences within pairs higlited with different colors? Logical
+#' @param col.dif color vector if \code{highlight = TRUE}
+#' @param groups.names labels for the groups names; numeric or character vector of length two.
+#' @param ... further arguments to be passed to \code{plot} function.
+#' (e.g., \code{cols}, \code{replace}, \code{stratum}).
+pairs.plot <- function(p1, p2, highlight = TRUE, col.dif = c("black","grey"), groups.names=c(1,2), ...){
   dots <- list(...)
   if(!"pch"%in%names(dots)) dots$pch=19
   if(!"xlim"%in%names(dots)) dots$xlim=c(0.8,2.2)
