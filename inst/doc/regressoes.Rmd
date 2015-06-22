@@ -1,0 +1,323 @@
+---
+title: "RRRR: Reproduzindo o Resampling com Rsampling para Regressões"
+author: "Paulo Inácio Prado"
+date: "Junho de 2015"
+output:
+  rmarkdown::html_vignette:
+    fig_width: 5
+    fig_height: 5
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+    collapse=TRUE,
+    comment = NA,
+    prompt = TRUE
+)
+```
+
+## Instalação
+O Rsampling está hospedado no GitHub.
+Para instalá-lo use a função `install_github` do pacote devtools:
+
+```{r installation, eval=FALSE}
+library(devtools)
+install_github(repo = 'lageIBUSP/Rsampling')
+```
+E então carregue o pacote
+
+```{r load library}
+library(Rsampling)
+```
+
+## Exemplos de regressão
+
+O dataframe `rhyzophora` tem medidas de árvores de mangue
+em solos lodosos mais e menos instáveis.
+
+```{r inspecionando objeto rhyzophora}
+head(rhyzophora)
+summary(rhyzophora)
+```
+Saiba mais sobre os dados em sua página de ajuda (`?rhyzophora`).
+
+### Hipótese do estudo
+
+A hipótese é que árvores em solos mais instáveis
+investem mais em estruturas de sustentação.
+Uma previsão é que a relação entre o torque
+da árvore e o investimento em raízes de sustentação
+deve ser diferente nos dois tipos de solo.
+Para representar o torque foi usada a razão
+entre a a área da copa e do tronco.
+O investimento em raízes foi expresso em número
+de raízes de sustentação e a área coberta por elas.
+
+Os dados sugerem uma relação positiva entre
+a variável de torque e o número de raízes.
+Também parece que os pontos das árvores amostradas nos dois tipos de solo
+separam-se, sugerindo uma relação diferente:
+
+```{r plot rhyzophora, fig.cap = "Relação entre o número de raízes de sustentação e razão área da copa / área do tronco em árvores de mangue em solos mais e menos instáveis."}
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="área copa / área tronco", ylab="número de raízes")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", pch=19)
+legend("topright", c("Média","Alta"), title="Instabilidade do solo", pch=c(1,19))
+```
+
+### Embaralhando linhas dentro de estratos
+
+#### Hipótese nula
+Para ilustrar randomizações restritas a estratos vamos testar
+a hipótese nula mais básica de que que não há relação em nenhum dos
+dois tipos de solos.
+Simulamos isso embaralhando os valores da variável de torque entre
+árvores de cada tipo de solo.
+
+#### Estatística de interesse
+Temos uma
+**estatística de interesse** para cada
+solo, que são
+as inclinações das regressões lineares:
+
+```{r estatistica de interesse rhyzophora}
+rhyz.ei <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="medium")
+    m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="high")
+    c(med = coef(m1)[[2]],
+      high = coef(m2)[[2]])
+}
+## Valore observados
+rhyz.ei(rhyzophora)
+```
+
+#### Distribuição da estatística sob a hipótese nula
+
+Simulamos a hipótese nula de ausência de relação
+embaralhando os valores da variável de torque entre
+árvores do mesmo tipo de solo:
+
+```{r rhyzophora resampling, results="hide"}
+rhyz.r <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei, stratum = rhyzophora$soil.instability,
+                        cols = 2, ntrials = 1000)
+```
+
+O argumento `stratum = rhyzophora$soil.instability`,
+que indica que o embaralhamento da coluna 2 deve ser feito dentro
+de cada tipo de solo.
+
+Como há mais de uma estatística de interesse, a função
+`Rsampling` retorna uma matriz em cada linha é uma estatística
+e as colunas são as repetições
+
+
+```{r rhyzophora resampling results}
+rhyz.r[,1:3]
+```
+
+Valores iguais ou maiores que as inclinações observadas parecem bem raros na distribuição
+de valores sob a hipótese nula:
+
+```{r rhyzophora distribuicao nula, fig.cap="Distribuição das inclinações da regressão linear do número de raízes em função da razão das áreas da copa e tronco, em 1000 simulações da hipótese nula de ausência de relação. As linhas vermelhas indicam as inclianções observadas.", fig.width=7.5}
+par(mfrow=c(1,2))
+hist(rhyz.r[1,], main="Média instabilidade", xlab="Inclinações sob H0")
+abline(v = rhyz.ei(rhyzophora)[1], lty=2, col="red")
+hist(rhyz.r[2,], main="Alta instabilidade", xlab="Inclinações sob H0")
+abline(v = rhyz.ei(rhyzophora)[2], lty=2, col="red")
+par(mfrow=c(1,1))
+```
+#### Decisão: rejeitamos a hipótese nula?
+
+Aplicando nosso critério de significância a cada estatística de interesse:
+
+```{r rhyzophora teste}
+sum(rhyz.r[1,] >= rhyz.ei(rhyzophora)[1])/1000 < 0.05
+sum(rhyz.r[2,] >= rhyz.ei(rhyzophora)[2])/1000 < 0.05
+```
+
+**Conclusão:** rejeita-se a hipótese nula (p<0,05) nos dois casos.
+
+### Comparação das inclinações
+
+A hipótese principal do estudo é que a relação
+entre torque e sustentação é diferente nos dois tipos de solo.
+Supondo que a relação linear existe, ela pode diferir quanto
+à inclinação ou intercepto.
+
+#### Hipótese nula
+Começamos testando a hipótese nula de que a inclinação
+das regressões lineares não difere entre solos.
+
+#### Estatística de interesse
+A estatística de interesse é a diferença entre as
+inclinações, que parece pequena:
+
+```{r segunda estatistica de interesse rhyzophora}
+rhyz.ei2 <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="medium")
+    m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="high")
+    coef(m1)[[2]] - coef(m2)[[2]]
+}
+## Valores observados
+rhyz.ei2(rhyzophora)
+```
+#### Simulação da hipótese nula
+Simulamos a nova hipótese nula embaralhando as árvores
+entre os tipos de solos (primeira coluna da tabela de dados):
+
+```{r rhyzophora resampling inclinação, results="hide"}
+rhyz.r2 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei2,
+                        cols = 1, ntrials = 1000)
+```
+
+#### Decisão: rejeitamos a hipótese nula?
+
+Neste caso não podemos descartar a hipótese nula:
+
+```{r rhyzophora 2nd teste}
+sum(rhyz.r2 > rhyz.ei2(rhyzophora))/1000 < 0.05
+```
+
+### Comparando interceptos
+
+Decidimos aceitar a hipótese nula de que as inclinações são
+iguais. A interpretação biológica disso é que nos dois tipos de solo
+o número de raízes de sustentação segue a mesma relação de
+proporcionalidade
+com a variável de torque.
+
+Este fator de proporcionalidade é a inclinação
+da regressão linear aplicada a **todas** as árvores,
+que estimamos ajustando a regressão:
+
+```{r inclinação comum rhyzophora}
+lm(n.roots ~ canopy.trunk, data=rhyzophora)
+```
+Ou seja, a cada aumento de 100 unidades da variável de torque
+em média
+`r round(coef(lm(n.roots ~ canopy.trunk, data=rhyzophora))[[2]]*100,1)`
+raízes são adiciondas.
+
+Note que esta proporcionalidade se mantém se adicionarmos qualquer
+constante. Por isso o modelo linear é expresso por
+
+$$E[Y] = \alpha + \beta X$$
+
+Em que $E[Y]$ é o valor esperado da resposta (número de raízes),
+$\beta$ é a inclinação ou fator de proporcionalidade, e $X$
+a variável preditora (torque).
+O intercepto $\alpha$ não altera a proporcionalidade,
+apenas desloca a reta mais para cima ou mais para baixo.
+
+Ou seja, retas com a mesma inclinação mas
+interceptos diferentes são paralelas.
+No nosso caso isso expressaria que
+árvores com mesmo valor da razão copa/troco
+**sempre** têm mais raízes em um dos tipos de solo.
+
+#### Hipótese nula
+
+Nossa hipótese nula é que os interceptos das regressões
+lineares não diferem entre os tipos de solo.
+Se isso é verdade a regressão linear ajustada a  todos os dados
+deve prever bem os valores da resposta.
+Se não for verdade os pontos de um tipo de solo tenderão a ficar abaixo da
+reta, enquanto os do outro tipo de solo tenderão a ficar acima.
+
+Já ajustamos essa regressão acima, e podemos adicionar a reta
+ao gráfico:
+
+
+```{r plot rhyzophora single regression, fig.cap = "Relação entre o número de raízes de sustentação e razão área da copa / área do tronco em árvores de mangue em solos mais e menos instáveis. A reta é a regressão linear ajustada a todos os pontos."}
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="área copa / área tronco", ylab="número de raízes")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", pch=19)
+abline(lm(n.roots ~ canopy.trunk, data=rhyzophora))
+legend("topright", c("Média","Alta"), title="Instabilidade do solo", pch=c(1,19))
+```
+
+Parece que de fato esta regressão subestima o número de raízes das
+árvores amostradas no solo mais instável e faz o oposto para as
+árvores do solo menos instável. Isso faz com que os resíduos desta
+regressão sejam positivos para árvores do solo instável e negativos
+para as outras.
+
+#### Estatística de interesse
+
+Nossa estatística de interesse é a diferença
+da médias dos resíduos das árvores em cada tipo de solo.
+Os resíduos são calculados da regressão aplicada a todos os dados:
+
+```{r terceiraestatistica de interesse rhyzophora}
+rhyz.ei3 <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe)
+    res.media <- tapply(resid(m1), dataframe$soil.instability, mean)
+    res.media[[1]] - res.media[[2]]
+}
+## Valores observados
+rhyz.ei3(rhyzophora)
+```
+
+#### Simulação da hipótese nula
+
+Simulamos a nova hipótese nula do mesmo jeito: embaralhando as árvores
+entre os tipos de solos (primeira coluna da tabela de dados).
+
+```{r rhyzophora resampling intercepto, results="hide"}
+rhyz.r3 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei3,
+                        cols = 1, ntrials = 1000)
+```
+
+#### Decisão: rejeitamos a hipótese nula?
+
+Descartamos a hipótese nula:
+
+```{r rhyzophora 3rd teste}
+sum(rhyz.r3 > rhyz.ei3(rhyzophora))/1000 < 0.05
+```
+
+Portanto há um intercepto para cada tipo de solo.
+Podemos estimá-los incluindo o efeito de solo no ajuste da regressão [^3]:
+
+```{r rhyzophora ancova}
+(rhyz.ancova <- lm(n.roots ~ soil.instability + canopy.trunk  -1,
+                   data=rhyzophora))
+```
+
+E adicionamos as retas ao gráfico:
+
+```{r plot rhyzophora ancova, fig.cap = "Relação entre o número de raízes de sustentação e razão área da copa / área do tronco em árvores de mangue em solos mais e menos instáveis. As retas são regressões lineares de mesma inclinação mas interceptos diferentes para cada tipo de solo."}
+cfs <- coef(rhyz.ancova)
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="área copa / área tronco", ylab="número de raízes")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium", col="blue")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", col="red")
+abline(cfs[1],cfs[3], col="red")
+abline(cfs[2],cfs[3], col="blue")
+legend("topright", c("Média","Alta"), title="Instabilidade do solo", col=c("blue", "red"))
+```
+
+[^3]: Detalhe técnico: Acrescentamos o termo `-1` na fórmula da regressão para indicar
+ao R que queremos as estimativas de cada intercepto. Caso contrário
+teríamos a estimativa de um intercepto e da diferença dele em relação
+ao outro.

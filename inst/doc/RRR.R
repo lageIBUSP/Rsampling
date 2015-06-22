@@ -1,0 +1,140 @@
+## ----setup, echo = FALSE-------------------------------------------------
+knitr::opts_chunk$set(
+    collapse=TRUE,
+    comment = NA,
+    prompt = TRUE
+    )
+
+## ----installation, eval=FALSE--------------------------------------------
+#  library(devtools)
+#  install_github(repo = 'lageIBUSP/Rsampling')
+
+## ----load library--------------------------------------------------------
+library(Rsampling)
+
+## ----inspecionando objeto embauba----------------------------------------
+head(embauba)
+summary(embauba)
+
+## ----proporcao de infestacao por morfo de embauba------------------------
+tapply(embauba$with.vines, embauba$morphotype, mean)
+
+## ----estatistica de interesse embaubas-----------------------------------
+emb.ei <- function(dataframe){
+    props <- tapply(dataframe$with.vines, dataframe$morphotype, mean)
+    props[[1]] - props[[2]]
+}
+## Verificando
+emb.ei(embauba)
+
+## ----embaubas resampling, results="hide"---------------------------------
+emb.r <- Rsampling(type = "normal", dataframe = embauba,
+                   statistics = emb.ei, cols = 2, ntrials = 1000)
+
+## ----embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada."----
+hist(emb.r, xlim=c(-0.5, 0.5),
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse")
+abline(v = emb.ei(embauba), lty=2, col="red")
+
+## ----embaubas teste------------------------------------------------------
+sum(emb.r >= emb.ei(embauba))/1000 < 0.05
+
+## ----inspecionando objeto azteca-----------------------------------------
+head(azteca)
+summary(azteca)
+
+## ----pairplot azteca, fig.cap = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas. Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas. As linhas ligam folhas do mesmo par experimental."----
+splot(azteca$extract.new, azteca$extract.old,
+           groups.names=c("Folha nova","Folha velha"),
+           ylab="N de formigas recrutadas",
+           xlab="Tipo de extrato aplicado")
+
+## ----estatistica de interesse azteca-------------------------------------
+azt.ei <- function(dataframe){
+    diferencas <- with(dataframe, extract.new - extract.old)
+    mean(diferencas)
+}
+## Valor observado
+azt.ei(azteca)
+
+## ----azteca resampling, results="hide"-----------------------------------
+azt.r <- Rsampling(type = "within_rows", dataframe = azteca,
+                   statistics = azt.ei, cols = 2:3, ntrials = 1000)
+
+## ----azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada."----
+hist(azt.r,
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse")
+abline(v = azt.ei(azteca), lty=2, col="red")
+
+## ----azteca teste--------------------------------------------------------
+sum(azt.r >= azt.ei(azteca))/1000 < 0.05
+
+## ----inspecionando objeto peucetia---------------------------------------
+head(peucetia)
+
+## ----barplot peucetia, fig.cap = "Número de inspeções em que as 27 aranhas foram registradas em folhas com tricomas, em um experimento de preferência por substratos."----
+## Número de inspeções em que estava em folha com tricomas
+n.insp <- apply(peucetia, 1, sum)
+barplot(table(factor(n.insp, levels=0:6)),
+        xlab="N de inspeções em que estava na folha com tricoma",
+        ylab="N de aranhas")
+
+
+## ----estatistica de interesse peucetia-----------------------------------
+peu.ei <- function(dataframe){
+    mean(apply(dataframe, 1, sum))
+}
+## Valor observado
+peu.ei(peucetia)
+
+## ----peucetia H0---------------------------------------------------------
+peu.H0 <- matrix( rep(c(TRUE,FALSE), each = 3),
+                 nrow = nrow(peucetia), ncol = ncol(peucetia), byrow=TRUE)
+## Converte em data.frame
+peu.H0 <- data.frame(peu.H0)
+## verificando
+head(peu.H0)
+
+## ----peucetia resampling, results="hide"---------------------------------
+peu.r <- Rsampling(type = "within_rows", dataframe = peu.H0,
+                   statistics = peu.ei, ntrials = 1000, replace=TRUE)
+
+## ----peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada."----
+hist(peu.r,
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
+abline(v = peu.ei(peucetia), lty=2, col="red")
+
+## ----peucetia teste------------------------------------------------------
+sum(peu.r >= peu.ei(peucetia))/1000 < 0.05
+
+## ----peucetia n de inspeções---------------------------------------------
+## N de inspeções em folha com tricoma
+tric <- apply(peucetia, 1, sum)
+## N de inspeções em folha lisa
+lisa <- apply(peucetia, 1, function(x) sum(x==0))
+## Monta o data frame
+peu.H0b <- data.frame(tric=tric, lisa = lisa)
+## Primeiras linhas
+head(peu.H0b)
+
+## ----peucetia statistics 2-----------------------------------------------
+peu.ei2 <- function(dataframe) mean(dataframe$tric)
+## Verificando
+peu.ei2(peu.H0b)
+
+## ----peucetia resampling 2, results="hide"-------------------------------
+peu.r2 <- Rsampling(type = "within_rows", dataframe = peu.H0b,
+                   statistics = peu.ei2, ntrials = 1000)
+
+## ----peucetia distribuicao nula 2, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato, considerando tendência das aranhas permanecerem onde estão. A linha vermelha indica a média observada."----
+hist(peu.r2,
+     main = "Distribuição da estatística de interesse sob H0",
+     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
+abline(v = peu.ei(peucetia), lty=2, col="red")
+
+## ----peucetia teste 2----------------------------------------------------
+sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
+
