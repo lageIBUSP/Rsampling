@@ -8,6 +8,8 @@ splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"),
   groups.names = c(1, 2), ...)
 }
 \arguments{
+\item{p1,p2}{vectors of paired values (numerical vectors)}
+
 \item{highlight}{should positive and negative differences within pairs highlighted with different colors? Logical}
 
 \item{col.dif}{color vector if \code{highlight = TRUE}}
@@ -16,8 +18,6 @@ splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"),
 
 \item{...}{further arguments to be passed to \code{plot} function.
 (e.g., \code{cols}, \code{replace}, \code{stratum}).}
-
-\item{{p1,}{p2} vectors of paired values (numerical vectors)}
 }
 \description{
 Quick plot of paired differences, for exploratory purposes.
