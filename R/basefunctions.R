@@ -43,47 +43,60 @@ NULL
 
 #' @rdname basefunctions
 within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
-    gather(cbind(rn=1:nrow(dataframe), dataframe[cols]),"variable", "value", -rn) %>%
-        group_by(rn) %>%
-            mutate(value=sample(value, size=n() , replace)) %>%
-                ungroup() %>%
-                    spread(variable, value) %>%
-                        select(-rn) %>%
-                            {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} 
+    cbind(rn=1:nrow(dataframe), dataframe[,cols]) %>%
+        as.data.frame() %>%
+            gather(key="variable", value="value", -rn) %>%
+                group_by(rn) %>%
+                    mutate(value=sample(value, size=n() , replace)) %>%
+                        ungroup() %>%
+                            spread(variable, value) %>%
+                                select(-rn) %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                        as.data.frame()
 }
 
 #' @rdname basefunctions
 within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
-    gather(cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]),"variable", "value", -rn , -stratum) %>%
-        group_by(stratum,variable) %>%
-            mutate(value=sample(value, size=n() , replace)) %>%
-                ungroup() %>%
-                    spread(variable, value) %>%
-                        select(-rn) %>%
-                            {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .}
+    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[,cols]) %>%
+        as.data.frame() %>%
+            gather("variable", "value", -rn , -stratum) %>%
+                group_by(stratum,variable) %>%
+                    mutate(value=sample(value, size=n() , replace)) %>%
+                        ungroup() %>%
+                            spread(variable, value) %>%
+                                select(-rn) %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                        as.data.frame()
 }
 
 #' @rdname basefunctions
 normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
-    gather(cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]),"variable", "value", -rn , -stratum) %>%
-        group_by(stratum) %>%
-            mutate(value=sample(value, size=n() , replace)) %>%
-                ungroup() %>%
-                    spread(variable, value) %>%
-                        select(-rn) %>%
-                            {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .}
+    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[,cols]) %>%
+        as.data.frame()%>%
+            gather("variable", "value", -rn , -stratum) %>%
+                group_by(stratum) %>%
+                    mutate(value=sample(value, size=n() , replace)) %>%
+                        ungroup() %>%
+                            spread(variable, value) %>%
+                                select(-rn) %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                        as.data.frame()
 }
 
 #' @rdname basefunctions
 rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = FALSE){
     cbind(ri=1:nrow(dataframe), dataframe) %>%
-        normal_rand(function(x)x, cols=1, stratum=stratum, replace) %>%
-            arrange(ri) %>%
-                select(-ri) 
+        as.data.frame() %>%
+            normal_rand(function(x)x, cols=1, stratum=stratum, replace) %>%
+                arrange(ri) %>%
+                    select(-ri) %>%
+                        as.data.frame()
 }
 
 #' @rdname basefunctions
 columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE){
     dataframe[,sample(cols, size=length(cols), replace)] %>%
-        {if(length(cols)<ncol(dataframe)) cbind(dataframe[-cols],.) else .}
+        {if(length(cols)<ncol(dataframe)) cbind(dataframe[,-cols],.) else .} %>%
+            as.data.frame()
+    
 }
