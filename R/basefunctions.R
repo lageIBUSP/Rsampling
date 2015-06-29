@@ -66,7 +66,7 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
                             mutate(value=sample(value, size=n() , replace)) %>%
                                 ungroup() %>%
                                     spread(variable, value) %>%
-                                        select(-rn) %>%
+                                        select(-rn, -stratum) %>%
                                             {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
                                                 as.data.frame()
 }
@@ -74,14 +74,14 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
 #' @rdname basefunctions
 normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
-    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]) %>%
+    cbind(rn=1:nrow(dataframe),stratum=stratum, dataframe[cols]) %>%
         as.data.frame()%>%
             gather("variable", "value", -rn , -stratum) %>%
                 group_by(stratum) %>%
                     mutate(value=sample(value, size=n() , replace)) %>%
                         ungroup() %>%
                             spread(variable, value) %>%
-                                select(-rn) %>%
+                                select(-rn, -stratum) %>%
                                     {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
                                         as.data.frame()
 }
