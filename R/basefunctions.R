@@ -43,6 +43,7 @@ NULL
 
 #' @rdname basefunctions
 within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
+    if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(rn=1:nrow(dataframe), dataframe[cols]) %>%
         as.data.frame() %>%
             gather(key="variable", value="value", -rn) %>%
@@ -57,20 +58,22 @@ within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
 
 #' @rdname basefunctions
 within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
-    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]) %>%
-        as.data.frame() %>%
-            gather("variable", "value", -rn , -stratum) %>%
-                group_by(stratum,variable) %>%
-                    mutate(value=sample(value, size=n() , replace)) %>%
-                        ungroup() %>%
-                            spread(variable, value) %>%
-                                select(-rn) %>%
-                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
-                                        as.data.frame()
+    if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
+    cbind(rn=1:nrow(dataframe), stratum=stratum,dataframe[cols]) %>%
+                as.data.frame() %>%
+                    gather("variable", "value", -rn , -stratum) %>%
+                        group_by(stratum,variable) %>%
+                            mutate(value=sample(value, size=n() , replace)) %>%
+                                ungroup() %>%
+                                    spread(variable, value) %>%
+                                        select(-rn) %>%
+                                            {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
+                                                as.data.frame()
 }
 
 #' @rdname basefunctions
 normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
+    if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]) %>%
         as.data.frame()%>%
             gather("variable", "value", -rn , -stratum) %>%
@@ -85,6 +88,7 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
 
 #' @rdname basefunctions
 rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = FALSE){
+    if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(ri=1:nrow(dataframe), dataframe) %>%
         as.data.frame() %>%
             normal_rand(function(x)x, cols=1, stratum=stratum, replace) %>%
@@ -95,6 +99,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
 
 #' @rdname basefunctions
 columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE){
+    if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     dataframe[,sample(cols, size=length(cols), replace)] %>%
         {if(length(cols)<ncol(dataframe)) cbind(dataframe[-cols],.) else .} %>%
             as.data.frame()

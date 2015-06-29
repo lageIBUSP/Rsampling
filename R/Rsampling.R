@@ -34,7 +34,7 @@ Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units",
                        dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", ...){
     f1 <- match.fun(match.arg(type))
     dots <- list(...)
-    ## get rid of arguments decalred in dots not defined for function chosen in 'type'
+    ## get rid of arguments declared in dots not defined for function chosen in 'type'
     dots <- dots[names(dots) %in% names(formals(f1))] 
     rlply(ntrials, statistics(do.call(f1, c(list(dataframe=dataframe), dots))), .progress = progress) %>%
         {if(simplify) simplify2array(.) else .}
