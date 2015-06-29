@@ -43,7 +43,7 @@ NULL
 
 #' @rdname basefunctions
 within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
-    cbind(rn=1:nrow(dataframe), dataframe[,cols]) %>%
+    cbind(rn=1:nrow(dataframe), dataframe[cols]) %>%
         as.data.frame() %>%
             gather(key="variable", value="value", -rn) %>%
                 group_by(rn) %>%
@@ -57,7 +57,7 @@ within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
 
 #' @rdname basefunctions
 within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
-    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[,cols]) %>%
+    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]) %>%
         as.data.frame() %>%
             gather("variable", "value", -rn , -stratum) %>%
                 group_by(stratum,variable) %>%
@@ -71,7 +71,7 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
 
 #' @rdname basefunctions
 normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
-    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[,cols]) %>%
+    cbind(rn=1:nrow(dataframe), stratum=stratum, dataframe[cols]) %>%
         as.data.frame()%>%
             gather("variable", "value", -rn , -stratum) %>%
                 group_by(stratum) %>%
