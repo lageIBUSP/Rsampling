@@ -5,9 +5,9 @@
 #' @inheritParams basefunctions
 #' @param type character; the name of the randomization function to be applied to \code{dataframe}.
 #' See \link[basefunctions]{randomization functions}.
-#' @param dataframe a dataframe with the data to be suffled or resampled.
+#' @param dataframe a dataframe with the data to be shuffled or resampled.
 #' @param statistics a function that calculates the statistics of interest from the dataframe.
-#' The first argument should be the dataframe with the data and preferavly should
+#' The first argument should be the dataframe with the data and preferably should
 #' return a (named) vector, data frame, matrix or array.
 #' @param ntrials integer; number of randomizations to perform.
 #' @param simplify logical; should the result be simplified
@@ -17,7 +17,7 @@
 #' 
 #' @section Details:
 #' 
-#' This function corresponds to \emph{Repeat and score} in Resampling Stats add-in for Excell
+#' This function corresponds to \emph{Repeat and score} in Resampling Stats add-in for Excel
 #' (www.resample.com). The randomization function defined by \code{type} is applied \code{ntrials}
 #' times on the data provided by \code{dataframe}. At each trial the function defined by argument
 #' \code{statistics} is applied to the resulting dataframe and the resulting objects are returned.
@@ -30,6 +30,7 @@
 #' 
 #' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
 #' \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
+#' @export
 Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units", "within_rows", "within_columns"),
                        dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", ...){
     f1 <- match.fun(match.arg(type))
