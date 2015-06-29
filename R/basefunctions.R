@@ -51,7 +51,7 @@ within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
                         ungroup() %>%
                             spread(variable, value) %>%
                                 select(-rn) %>%
-                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[,colnames(dataframe)] else .} %>%
                                         as.data.frame()
 }
 
@@ -65,7 +65,7 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
                         ungroup() %>%
                             spread(variable, value) %>%
                                 select(-rn) %>%
-                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
                                         as.data.frame()
 }
 
@@ -79,7 +79,7 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
                         ungroup() %>%
                             spread(variable, value) %>%
                                 select(-rn) %>%
-                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[,-cols])[colnames(dataframe)] else .} %>%
+                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[colnames(dataframe)] else .} %>%
                                         as.data.frame()
 }
 
@@ -96,7 +96,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
 #' @rdname basefunctions
 columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE){
     dataframe[,sample(cols, size=length(cols), replace)] %>%
-        {if(length(cols)<ncol(dataframe)) cbind(dataframe[,-cols],.) else .} %>%
+        {if(length(cols)<ncol(dataframe)) cbind(dataframe[-cols],.) else .} %>%
             as.data.frame()
     
 }
