@@ -2,14 +2,14 @@
 #'
 #' Functions to run (un)restricted sampling with or without replacement in a dataframe.
 #'
-#' @param dataframe a dataframe with the data to be suffled or resampled.
+#' @param dataframe a dataframe with the data to be shuffled or resampled.
 #' @param cols columns of dataframe that should be selected to be resampled/shuffled. Defaults for all columns.
-#' @param replace (logical) should the data be permuted (FALSE) or resmpled with replacement (TRUE) ?
+#' @param replace (logical) should the data be permuted (FALSE) or resampled with replacement (TRUE) ?
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
 #' 
 #' @section Details:
 #' 
-#' Each function performs as close as possible the corresponding options in Resampling Stats add-in for Excell
+#' Each function performs as close as possible the corresponding options in Resampling Stats add-in for Excel
 #' (www.resample.com) for permutation (shuffling) and sampling with replacement (resampling)
 #' values in tabular data:
 #' \itemize{
@@ -42,6 +42,7 @@
 NULL
 
 #' @rdname basefunctions
+#' @export
 within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(rn=1:nrow(dataframe), dataframe[cols]) %>%
@@ -57,6 +58,7 @@ within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
 }
 
 #' @rdname basefunctions
+#' @export
 within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(rn=1:nrow(dataframe), stratum=stratum,dataframe[cols]) %>%
@@ -72,6 +74,7 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
 }
 
 #' @rdname basefunctions
+#' @export
 normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(rn=1:nrow(dataframe),stratum=stratum, dataframe[cols]) %>%
@@ -87,6 +90,7 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
 }
 
 #' @rdname basefunctions
+#' @export
 rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(ri=1:nrow(dataframe), dataframe) %>%
@@ -98,6 +102,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
 }
 
 #' @rdname basefunctions
+#' @export
 columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     dataframe[,sample(cols, size=length(cols), replace)] %>%

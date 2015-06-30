@@ -6,14 +6,14 @@
 #' @format A data frame with 21 rows and 3 variables:
 #' \describe{
 #' \item{plant}{plant id, integer}
-#' \item{extract.new}{number of recruited ants in the leave droped with extract of smashed new leaves}
-#' \item{extract.new}{number of recruited ants in the leave droped with extract of smashed old leaves}
+#' \item{extract.new}{number of recruited ants in the leaf that received drops of smashed new leaves extract}
+#' \item{extract.new}{number of recruited ants in the leaf that received drops of smashed old leaves extract}
 #' }
 #' @section Details:
 #' The ant colonies live in the hollow
 #' trunk of \emph{Cecropia} and can detect and expel leaf-chewing insects.
 #' To test if this response is more intense in young leaves, drops of extract of smashed young and old leaves
-#' were poured in two neighbour leaves of the same plant. After 7 minutes the number of recruited ants in each leaf was recorded.
+#' were poured in two neighbor leaves of the same plant. After 7 minutes the number of recruited ants in each leaf was recorded.
 #' @source
 #' Kondrat, H. 2012. Estímulos químicos de folhas novas promovem recrutamento eficiente de formigas associadas à embaúba
 #' \emph{Cecropia glaziovi} (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
@@ -24,7 +24,7 @@
 
 #' Vine infestation on Cecropia trees
 #'
-#' Presence/absence data of vines on Ceropia trees of two morphotypes.
+#' Presence/absence data of vines on Cecropia trees of two morphotypes.
 #'
 #' @format A data frame with 152 rows (plants) and 2 variables:
 #' \describe{
@@ -46,12 +46,12 @@
 #' Preference of hunting spiders by hairy leaves
 #'
 #' Occupancy of \emph{Peucetia} spiders on parts of an experimental arena covered by
-#' leaves with or without tricomes.
+#' leaves with or without trichomes.
 #'
 #' @format A data frame with 27 rows (trials) and 6 variables:
 #' \describe{
 #' \item{t1 ... t6}{Is the spider on the part covered by hairy leaves? Logical,
-#' for each of 6 sucessive inspections (time 1, 2, ...}
+#' for each of 6 successive inspections (time 1, 2, ...}
 #' }
 #' @section Details:
 #' Spiders of the genus \emph{Peucetia} do not make webs and hunt actively on the vegetation.
@@ -67,7 +67,7 @@
 "peucetia"
 
 
-#' Allometry in mangroove trees
+#' Allometry in mangrove trees
 #'
 #' Canopy to height ratio and variables of root area in mangrove trees sampled in two soil types.
 #'
@@ -76,7 +76,7 @@
 #' \item{soil.instability}{soil type according to instability; factor with two levels (high / medium)}
 #' \item{canopy.trunk}{ratio between canopy and trunk area, both in m2, numeric}
 #' \item{root}{area covered by aerial roots, numeric (m2)}
-#' \item{n.roots}{numebr of aerial roots, integer}
+#' \item{n.roots}{number of aerial roots, integer}
 #' }
 #' @section Details:
 #' Data from a field practical exercise to test if mangrove trees in more unstable soil
