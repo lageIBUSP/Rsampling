@@ -1,9 +1,10 @@
 Package: Rsampling
 Title: Ports the workflow of "Resampling Stats" add-in to R
-Version: 0.0.0.1
+Version: 0.0.0.2
 Authors@R: c(
 	   person("Paulo", "Prado", , "prado@ib.usp.br", role = c("aut", "cre")),
-	   person("Fulano", "Detal", , "detal@xxx.br", role = c("aut"))
+	   person("Andr\'e", "Chalom", , "andrechalom@gmail.com", role = c("aut")),
+	   person("Alexandre", "Oliveira", , "aaoliveira@ib.usp.br", role = c("aut"))
 	   )
 Description: Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excel worksheets.
 	     The workflow is (1) to define a statistic of interest that can be calculated from a data table,
