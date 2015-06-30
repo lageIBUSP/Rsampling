@@ -2,6 +2,7 @@
 
 export(Rsampling)
 export(columns_as_units)
+export(dplot)
 export(normal_rand)
 export(rows_as_units)
 export(splot)
