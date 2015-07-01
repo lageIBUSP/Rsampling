@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
     comment = NA,
     prompt = TRUE
     )
+set.seed(42)
 ```
 
 ## Apresentação
@@ -141,12 +142,12 @@ emb.r <- Rsampling(type = "normal", dataframe = embauba,
 A distribuição das estatística de interesse
 na simulação nem incluiu o valor observado:
 
-```{r embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada."}
-hist(emb.r, xlim=c(-0.5, 0.5),
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse")
-abline(v = emb.ei(embauba), lty=2, col="red")
+```{r embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."}
+dplot(emb.r, svalue = emb.ei(embauba), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 ```
+
 
 ### Decisão: rejeitamos a hipótese nula?
 
@@ -156,14 +157,20 @@ a hipótese nula se a probabilidade
 da estatística de interesse sob a hipótese nula
 for menor que 5%.
 
-Este critério é verificado com um teste lógico no
+No gráfico o que não está marcado em cinza são os 5%
+mais extremos da distribuição da estatística sob a hipótese nula.
+Então se a estatística observada estiver na região cinza não rejeitamos
+a hipótese nula. Esta é a chamada \emph{região de aceitação} de H0.
+Como o valor observado (linha vermelha) está fora da região de aceitação,
+podemos rejeitá-la.
+Você também pode verificar isso com um teste lógico no
 R:
 
 ```{r embaubas teste} 
 sum(emb.r >= emb.ei(embauba))/1000 < 0.05
 ```
 
-**Conclusão:** rejeita-se a hipótese nula (p<0,05).
+**Conclusão:** rejeita-se a hipótese nula (p < 0,05).
 
 
 ## Embaralhando dentro de linhas para testar diferenças dentro de pares
@@ -239,16 +246,16 @@ que têm as contagens.
 Uma diferença igual ou maior que a observada foi muito rara
 na distribuição da estatística de interesse:
 
-```{r azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada."}
-hist(azt.r,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse")
-abline(v = azt.ei(azteca), lty=2, col="red")
+```{r azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."}
+dplot(azt.r, svalue = azt.ei(azteca), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 ```
 
 ### Decisão: rejeitamos a hipótese nula?
 
-Aplicando nosso critério de significância:
+Novamente o gráfico mostra que o valor observado da estatística está fora da região de aceitação da hipótese nula sob nosso critério de significância (5% de chance de erro).
+O mesmo resultado é verificado com o teste lógico:
 
 ```{r azteca teste} 
 sum(azt.r >= azt.ei(azteca))/1000 < 0.05
@@ -256,6 +263,24 @@ sum(azt.r >= azt.ei(azteca))/1000 < 0.05
 
 **Conclusão:** rejeita-se a hipótese nula (p<0,05).
 
+#### Coda: testes unicaudais e bicaudais
+
+Até agora testamos hipóteses de que um valor **igual ou maior** que o observado
+pode ser gerado pela hipótese nula. É um teste **unicaudal** ou **unidirecional**, como
+seria também o teste de que um valor igual ou menor pode ser gerado pela hipótese nula.
+Nos testes unicaudais a região de aceitação é toda a distribuição nula exceto seus 5% mais extremos.
+
+Mas pode interessar o teste de que há diferenças, sem especificar sua direção. Por exemplo,
+o conhecimento prévio poderia indicar a hipótese de que extratos de folhas jovens e velhas devem recrutar
+números diferentes de formigas, mas sem a expectativa de qual extrato recutaria mais. Este é um caso
+de teste **bicaudal**, quando a região de aceitação é o centro da distribuição nula, exceto seus
+2,5% mais extremos de cada lado:
+
+```{r azteca distribuicao nula bicaudal, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A região de aceitação da hipótese nula para 5% de significância para teste bicaudal está delimitada em cinza."}
+dplot(azt.r, svalue = azt.ei(azteca), pside="Two sided",
+      main = "Teste bicaudal",
+      xlab = "Estatística de interesse")
+```
 
 ## Aleatorização com reposição
 
@@ -351,22 +376,24 @@ na folha com tricomas é 0,5 a cada sorteio.
 Uma média igual ou maior que a observada não ocorreu
 na distribuição da estatística de interesse simulada:
 
-```{r peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada."}
-hist(peu.r,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
-abline(v = peu.ei(peucetia), lty=2, col="red")
+
+```{r peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."}
+dplot(peu.r, svalue = peu.ei(peucetia), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 ```
 
 ### Decisão: rejeitamos a hipótese nula?
 
-Aplicando nosso critério de significância:
+Novamente temos um teste unicaudal, e o valor observado da estatística de interesse não
+está na região de aceitação da hipótese nula (5%).
+Confirmamos com o teste lógico do nosso critério de significância:
 
 ```{r peucetia teste} 
 sum(peu.r >= peu.ei(peucetia))/1000 < 0.05
 ```
 
-**Conclusão:** rejeita-se a hipótese nula (p<0,05).
+**Conclusão:** rejeita-se a hipótese nula (p < 0,05).
 
 ## Uma hipótese nula mais realista?
 
@@ -442,21 +469,21 @@ A distribuição nula mudou bastante de forma comparada com a seção anterior.
 Mas uma média igual ou maior que a observada ainda foi muito rara:
 
 ```{r peucetia distribuicao nula 2, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato, considerando tendência das aranhas permanecerem onde estão. A linha vermelha indica a média observada."}
-hist(peu.r2,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
-abline(v = peu.ei(peucetia), lty=2, col="red")
+dplot(peu.r2, svalue = peu.ei2(peu.H0b), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 ```
 
 ### Decisão: rejeitamos a hipótese nula?
 
+O valor observado da estatística de interesse não está na região de aceitação.
 Aplicando nosso critério de significância:
 
 ```{r peucetia teste 2} 
 sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
 ```
 
-**Conclusão:** rejeita-se a hipótese nula (p<0,05).
+**Conclusão:** rejeita-se a hipótese nula (p < 0,05).
 
 
 [^2]: Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
