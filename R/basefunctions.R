@@ -42,19 +42,24 @@
 NULL
 
 #' @rdname basefunctions
-within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
+## within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
+##     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
+##     cbind(rn=1:nrow(dataframe), dataframe[cols]) %>%
+##         as.data.frame() %>%
+##             gather(key="variable", value="value", -rn) %>%
+##                 group_by(rn) %>%
+##                     mutate(value=sample(value, size=n() , replace)) %>%
+##                         ungroup() %>%
+##                             spread(variable, value) %>%
+##                                 select(-rn) %>%
+##                                     {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[,colnames(dataframe)] else .} %>%
+##                                         as.data.frame()
+## }
+within_rows <- function(dataframe, replace=FALSE){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
-    cbind(rn=1:nrow(dataframe), dataframe[cols]) %>%
-        as.data.frame() %>%
-            gather(key="variable", value="value", -rn) %>%
-                group_by(rn) %>%
-                    mutate(value=sample(value, size=n() , replace)) %>%
-                        ungroup() %>%
-                            spread(variable, value) %>%
-                                select(-rn) %>%
-                                    {if(length(cols)<ncol(dataframe)) cbind(., dataframe[-cols])[,colnames(dataframe)] else .} %>%
-                                        as.data.frame()
-}
+    cols=1:ncol(dataframe)
+    
+    
 
 #' @rdname basefunctions
 within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
