@@ -3,7 +3,8 @@ knitr::opts_chunk$set(
     collapse=TRUE,
     comment = NA,
     prompt = TRUE
-)
+    )
+set.seed(42)
 
 ## ----installation, eval=FALSE--------------------------------------------
 #  library(devtools)

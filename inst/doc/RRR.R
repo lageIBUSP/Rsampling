@@ -4,6 +4,7 @@ knitr::opts_chunk$set(
     comment = NA,
     prompt = TRUE
     )
+set.seed(42)
 
 ## ----installation, eval=FALSE--------------------------------------------
 #  library(devtools)
