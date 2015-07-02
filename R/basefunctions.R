@@ -28,7 +28,7 @@
 #' All functions assemble the randomized values in a dataframe
 #' of the same configuration of the original. Columns that
 #' were not selected to be randomized with argument \code{cols} are then
-#' bind to the resulting dataframe.
+#' bound to the resulting dataframe.
 #'
 #'
 #' @return a dataframe with the same structure of those input in \code{dataframe} with values randomized accordingly.
@@ -68,7 +68,7 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
     ust=unique(stratum)
     #dfs=dataframe[,cols]
     for(i in ust){
-        dataframe[stratum == i, cols]<- sample(as.matrix(dataframe[stratum == i,cols]))
+        dataframe[stratum == i, cols]<- sample(as.matrix(dataframe[stratum == i,cols]), replace=replace)
     }
     return(dataframe)   
 }
@@ -80,7 +80,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
     ust=unique(stratum)
     ind=c()
     for(i in ust){
-        ind<-c(ind, sample(which(stratum==i)), replace=replace)
+        ind<-c(ind, sample(which(stratum==i), replace=replace))
     }
     dataframe[ind,]
 }
