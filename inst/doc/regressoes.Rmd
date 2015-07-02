@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
     collapse=TRUE,
     comment = NA,
     prompt = TRUE
-)
+    )
+set.seed(42)
 ```
 
 ## Instalação
@@ -129,24 +130,26 @@ rhyz.r[,1:3]
 Valores iguais ou maiores que as inclinações observadas parecem bem raros na distribuição
 de valores sob a hipótese nula:
 
-```{r rhyzophora distribuicao nula, fig.cap="Distribuição das inclinações da regressão linear do número de raízes em função da razão das áreas da copa e tronco, em 1000 simulações da hipótese nula de ausência de relação. As linhas vermelhas indicam as inclianções observadas.", fig.width=7.5}
+```{r rhyzophora distribuicao nula, fig.cap="Distribuição das inclinações da regressão linear do número de raízes em função da razão das áreas da copa e tronco, em 1000 simulações da hipótese nula de ausência de relação. As linhas vermelhas indicam as inclinações observadas. A região de aceitação da hipótese nula a 5% está em cinza. Em laranja o número de valores da distribuição nula maiores que os observados.", fig.width=7.5}
 par(mfrow=c(1,2))
-hist(rhyz.r[1,], main="Média instabilidade", xlab="Inclinações sob H0")
-abline(v = rhyz.ei(rhyzophora)[1], lty=2, col="red")
-hist(rhyz.r[2,], main="Alta instabilidade", xlab="Inclinações sob H0")
-abline(v = rhyz.ei(rhyzophora)[2], lty=2, col="red")
+dplot(rhyz.r[1,], svalue=rhyz.ei(rhyzophora)[1], pside="Greater",
+      main="Média instabilidade", xlab="Inclinações sob H0")
+dplot(rhyz.r[2,], svalue=rhyz.ei(rhyzophora)[2], pside="Greater",
+      main="Alta instabilidade", xlab="Inclinações sob H0")
 par(mfrow=c(1,1))
 ```
 #### Decisão: rejeitamos a hipótese nula?
 
-Aplicando nosso critério de significância a cada estatística de interesse:
+As inclinações observadas para os dois grupos estão fora da região de aceitação da
+hipótese nula unicaudal [^4] a 5% de significância. 
+Podemos verificar isso com um teste lógico aplicado a cada estatística de interesse:
 
 ```{r rhyzophora teste}
 sum(rhyz.r[1,] >= rhyz.ei(rhyzophora)[1])/1000 < 0.05
 sum(rhyz.r[2,] >= rhyz.ei(rhyzophora)[2])/1000 < 0.05
 ```
 
-**Conclusão:** rejeita-se a hipótese nula (p<0,05) nos dois casos.
+**Conclusão:** rejeita-se a hipótese nula (p < 0,05) nos dois casos.
 
 ### Comparação das inclinações
 
@@ -321,3 +324,5 @@ legend("topright", c("Média","Alta"), title="Instabilidade do solo", col=c("blu
 ao R que queremos as estimativas de cada intercepto. Caso contrário
 teríamos a estimativa de um intercepto e da diferença dele em relação
 ao outro.
+
+[^4]: Como não faz sentido neste caso esperar que o número de raízes diminua com a variável de torque fizemos um teste unicaudal.

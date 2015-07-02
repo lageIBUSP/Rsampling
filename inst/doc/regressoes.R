@@ -3,7 +3,8 @@ knitr::opts_chunk$set(
     collapse=TRUE,
     comment = NA,
     prompt = TRUE
-)
+    )
+set.seed(42)
 
 ## ----installation, eval=FALSE--------------------------------------------
 #  library(devtools)
@@ -45,12 +46,12 @@ rhyz.r <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
 ## ----rhyzophora resampling results---------------------------------------
 rhyz.r[,1:3]
 
-## ----rhyzophora distribuicao nula, fig.cap="Distribuição das inclinações da regressão linear do número de raízes em função da razão das áreas da copa e tronco, em 1000 simulações da hipótese nula de ausência de relação. As linhas vermelhas indicam as inclianções observadas.", fig.width=7.5----
+## ----rhyzophora distribuicao nula, fig.cap="Distribuição das inclinações da regressão linear do número de raízes em função da razão das áreas da copa e tronco, em 1000 simulações da hipótese nula de ausência de relação. As linhas vermelhas indicam as inclinações observadas. A região de aceitação da hipótese nula a 5% está em cinza. Em laranja o número de valores da distribuição nula maiores que os observados.", fig.width=7.5----
 par(mfrow=c(1,2))
-hist(rhyz.r[1,], main="Média instabilidade", xlab="Inclinações sob H0")
-abline(v = rhyz.ei(rhyzophora)[1], lty=2, col="red")
-hist(rhyz.r[2,], main="Alta instabilidade", xlab="Inclinações sob H0")
-abline(v = rhyz.ei(rhyzophora)[2], lty=2, col="red")
+dplot(rhyz.r[1,], svalue=rhyz.ei(rhyzophora)[1], pside="Greater",
+      main="Média instabilidade", xlab="Inclinações sob H0")
+dplot(rhyz.r[2,], svalue=rhyz.ei(rhyzophora)[2], pside="Greater",
+      main="Alta instabilidade", xlab="Inclinações sob H0")
 par(mfrow=c(1,1))
 
 ## ----rhyzophora teste----------------------------------------------------

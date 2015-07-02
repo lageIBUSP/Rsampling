@@ -4,6 +4,7 @@ knitr::opts_chunk$set(
     comment = NA,
     prompt = TRUE
     )
+set.seed(42)
 
 ## ----installation, eval=FALSE--------------------------------------------
 #  library(devtools)
@@ -31,11 +32,10 @@ emb.ei(embauba)
 emb.r <- Rsampling(type = "normal", dataframe = embauba,
                    statistics = emb.ei, cols = 2, ntrials = 1000)
 
-## ----embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada."----
-hist(emb.r, xlim=c(-0.5, 0.5),
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse")
-abline(v = emb.ei(embauba), lty=2, col="red")
+## ----embaubas distribuicao nula, fig.cap="Distribuição das diferenças nas proporções de embaúbas brancas e vermelhas com lianas em 1000 simulações da hipótese nula de ausência de diferença nas populações amostradas. A linha vermelha indica a diferença observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."----
+dplot(emb.r, svalue = emb.ei(embauba), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 
 ## ----embaubas teste------------------------------------------------------
 sum(emb.r >= emb.ei(embauba))/1000 < 0.05
@@ -62,14 +62,18 @@ azt.ei(azteca)
 azt.r <- Rsampling(type = "within_rows", dataframe = azteca,
                    statistics = azt.ei, cols = 2:3, ntrials = 1000)
 
-## ----azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada."----
-hist(azt.r,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse")
-abline(v = azt.ei(azteca), lty=2, col="red")
+## ----azteca distribuicao nula, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A linha vermelha indica a diferença observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."----
+dplot(azt.r, svalue = azt.ei(azteca), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 
 ## ----azteca teste--------------------------------------------------------
 sum(azt.r >= azt.ei(azteca))/1000 < 0.05
+
+## ----azteca distribuicao nula bicaudal, fig.cap="Distribuição das diferenças do número de formigas recrutadas por extratos de folhas novas e velhas de embaúba em pares experimentais, em 1000 simulações da hipótese nula de ausência de diferença. A região de aceitação da hipótese nula para 5% de significância para teste bicaudal está delimitada em cinza."----
+dplot(azt.r, svalue = azt.ei(azteca), pside="Two sided",
+      main = "Teste bicaudal",
+      xlab = "Estatística de interesse")
 
 ## ----inspecionando objeto peucetia---------------------------------------
 head(peucetia)
@@ -101,11 +105,10 @@ head(peu.H0)
 peu.r <- Rsampling(type = "within_rows", dataframe = peu.H0,
                    statistics = peu.ei, ntrials = 1000, replace=TRUE)
 
-## ----peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada."----
-hist(peu.r,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
-abline(v = peu.ei(peucetia), lty=2, col="red")
+## ----peucetia distribuicao nula, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato. A linha vermelha indica a média observada. A região de aceitação da hipótese nula para 5% de significância está delimitada em cinza."----
+dplot(peu.r, svalue = peu.ei(peucetia), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 
 ## ----peucetia teste------------------------------------------------------
 sum(peu.r >= peu.ei(peucetia))/1000 < 0.05
@@ -130,10 +133,9 @@ peu.r2 <- Rsampling(type = "within_rows", dataframe = peu.H0b,
                    statistics = peu.ei2, ntrials = 1000)
 
 ## ----peucetia distribuicao nula 2, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato, considerando tendência das aranhas permanecerem onde estão. A linha vermelha indica a média observada."----
-hist(peu.r2,
-     main = "Distribuição da estatística de interesse sob H0",
-     xlab = "Estatística de interesse", xlim = range(peu.r, peu.ei(peucetia)))
-abline(v = peu.ei(peucetia), lty=2, col="red")
+dplot(peu.r2, svalue = peu.ei2(peu.H0b), pside="Greater",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse")
 
 ## ----peucetia teste 2----------------------------------------------------
 sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
