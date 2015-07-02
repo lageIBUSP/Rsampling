@@ -80,7 +80,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
     ust=unique(stratum)
     ind=c()
     for(i in ust){
-        ind<-c(ind, sample(which(stratum==i)), replace=replace)
+        ind<-c(ind, sample(which(stratum==i), replace=replace))
     }
     dataframe[ind,]
 }
