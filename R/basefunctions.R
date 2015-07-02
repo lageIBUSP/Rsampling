@@ -81,7 +81,7 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
         as.data.frame()%>%
             gather("variable", "value", -rn , -stratum) %>%
                 group_by(stratum) %>%
-                    mutate(value=sample(value, size=n() , replace)) %>%
+                    mutate(value=sample(value, size=n() , replace=replace)) %>%
                         ungroup() %>%
                             spread(variable, value) %>%
                                 select(-rn, -stratum) %>%
@@ -95,7 +95,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     cbind(ri=1:nrow(dataframe), dataframe) %>%
         as.data.frame() %>%
-            normal_rand(function(x)x, cols=1, stratum=stratum, replace) %>%
+            normal_rand(function(x)x, cols=1, stratum=stratum, replace=replace) %>%
                 arrange(ri) %>%
                     select(-ri) %>%
                         as.data.frame()
