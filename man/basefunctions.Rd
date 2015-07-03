@@ -64,7 +64,7 @@ bound to the resulting dataframe.
 \section{References}{
 
 
-Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
+Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User's Guide.
 \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 }
 
