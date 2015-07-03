@@ -4,7 +4,7 @@
 #' user-define function which is applied to each randomized dataframe.
 #' @inheritParams basefunctions
 #' @param type character; the name of the randomization function to be applied to \code{dataframe}.
-#' See \link[basefunctions]{randomization functions}.
+#' See \link[=basefunctions]{randomization functions}.
 #' @param dataframe a dataframe with the data to be shuffled or resampled.
 #' @param statistics a function that calculates the statistics of interest from the dataframe.
 #' The first argument should be the dataframe with the data and preferably should
@@ -14,6 +14,7 @@
 #' to a vector, matrix or higher dimensional array if possible? 
 #' @param ... further arguments to be passed to the randomization functions
 #' (e.g., \code{cols}, \code{replace}, \code{stratum}).
+#' @param progress which kind of progress bar should be used (currently unimplemented!)
 #' 
 #' @section Details:
 #' 
@@ -28,7 +29,7 @@
 #' 
 #' @section References:
 #' 
-#' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
+#' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User's Guide.
 #' \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 #' @export
 Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units", "within_rows", "within_columns"),
