@@ -45,12 +45,12 @@ values in tabular data:
 \itemize{
   \item \code{normal_rand} corresponds to the 'normal shuffle' and 'normal resample' option.
 For shuffling (\code{replace=FALSE}) the data is permuted over all cells of \code{dataframe}.
-For resampling (\code{replace=FALSE}) data from any cell can be sampled and attributed to any other cell.
+For resampling (\code{replace=TRUE}) data from any cell can be sampled and attributed to any other cell.
 \item \code{within_rows} and \code{within_columns} correspond to the options with the same names.
 The randomization is done within each row or column of \code{dataframe}.
-So for shuffling the values of each line/column are permuted independently and for
-resampling the values are sampled independently from each line/column and attributed only
-to cells of the line/column they were sampled.
+So for shuffling the values of each row/column are permuted independently and for
+resampling the values are sampled independently from each row/column and attributed only
+to cells of the row/column they were sampled.
 \item \code{rows_as_units} and \code{columns_as_units} also correspond to the options with the same names.
 Each row or column \code{dataframe} is shuffled or resampled as whole.
 Only the placement of rows and columns in the dataframe change. The position of values in each line/column remains the same.
@@ -58,7 +58,7 @@ Only the placement of rows and columns in the dataframe change. The position of 
 All functions assemble the randomized values in a dataframe
 of the same configuration of the original. Columns that
 were not selected to be randomized with argument \code{cols} are then
-bind to the resulting dataframe.
+bound to the resulting dataframe.
 }
 
 \section{References}{
