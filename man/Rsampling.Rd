@@ -10,7 +10,7 @@ Rsampling(type = c("normal_rand", "rows_as_units", "columns_as_units",
 }
 \arguments{
 \item{type}{character; the name of the randomization function to be applied to \code{dataframe}.
-See \link[basefunctions]{randomization functions}.}
+See \link[=basefunctions]{randomization functions}.}
 
 \item{dataframe}{a dataframe with the data to be shuffled or resampled.}
 
@@ -22,6 +22,8 @@ return a (named) vector, data frame, matrix or array.}
 
 \item{simplify}{logical; should the result be simplified
 to a vector, matrix or higher dimensional array if possible?}
+
+\item{progress}{which kind of progress bar should be used (currently unimplemented!)}
 
 \item{fix.zeroes}{logical; for normal_rand, within_rows or within_columns, should zeroes in the dataframe
 be kept in place? See the help on \code{\link{zfsample}} for more details.}
@@ -50,7 +52,7 @@ times on the data provided by \code{dataframe}. At each trial the function defin
 \section{References}{
 
 
-Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
+Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User's Guide.
 \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 }
 

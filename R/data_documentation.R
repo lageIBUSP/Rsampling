@@ -7,7 +7,7 @@
 #' \describe{
 #' \item{plant}{plant id, integer}
 #' \item{extract.new}{number of recruited ants in the leaf that received drops of smashed new leaves extract}
-#' \item{extract.new}{number of recruited ants in the leaf that received drops of smashed old leaves extract}
+#' \item{extract.old}{number of recruited ants in the leaf that received drops of smashed old leaves extract}
 #' }
 #' @section Details:
 #' The ant colonies live in the hollow
@@ -19,6 +19,7 @@
 #' \emph{Cecropia glaziovi} (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
 #' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Hebert.pdf}
+#' @encoding utf-8
 "azteca"
 
 
@@ -41,6 +42,7 @@
 #' (Urticaceae). Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.M.Z. Martini, eds.). Universidade de São Paulo, São Paulo.
 #' \url{http://ecologia.ib.usp.br/curso/2012/PDF/PI-Thayna.pdf}
+#' @encoding utf-8
 "embauba"
 
 #' Preference of hunting spiders by hairy leaves
@@ -50,7 +52,7 @@
 #'
 #' @format A data frame with 27 rows (trials) and 6 variables:
 #' \describe{
-#' \item{t1 ... t6}{Is the spider on the part covered by hairy leaves? Logical,
+#' \item{t1,t2,t3,t4,t5,t6}{Is the spider on the part covered by hairy leaves? Logical,
 #' for each of 6 successive inspections (time 1, 2, ...}
 #' }
 #' @section Details:
@@ -64,6 +66,7 @@
 #' em plantas com tricomas glandulares. Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado; P.I. Prado & A.A. Oliveira, eds.). Universidade de São Paulo, São Paulo.
 #' \url{http://ecologia.ib.usp.br/curso/2010/pages/pdf/PI/relatorios/rachel.pdf}
+#' @encoding utf-8
 "peucetia"
 
 
@@ -86,4 +89,5 @@
 #' condições de inundação do solo. Curso de campo "Ecologia da Mata Atlântica"
 #' (G. Machado, P.I. Prado & A.M.Z. Martini eds.). Universidade de São Paulo, São Paulo.
 #' \url{http://ecologia.ib.usp.br/curso/2013/pdf/PO4-2.pdf}
+#' @encoding utf-8
 "rhyzophora"
