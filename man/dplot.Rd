@@ -20,6 +20,8 @@ dplot(dist, svalue, pside = c("Two sided", "Greater", "Lesser"),
 \item{vline}{logical. should the svalue be displayed as a vertical line?}
 
 \item{rejection}{logical. should the critical region be highlighted?}
+
+\item{...}{further arguments to be passed to \code{hist} function.}
 }
 \description{
 Plots the distribution of the statistic of interest. Has switches to

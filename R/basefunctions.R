@@ -30,14 +30,14 @@
 #' All functions assemble the randomized values in a dataframe
 #' of the same configuration of the original. Columns that
 #' were not selected to be randomized with argument \code{cols} are then
-#' bind to the resulting dataframe.
+#' bound to the resulting dataframe.
 #'
 #'
 #' @return a dataframe with the same structure of those input in \code{dataframe} with values randomized accordingly.
 #' 
 #' @section References:
 #' 
-#' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.
+#' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User's Guide.
 #' \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 
 #' @name basefunctions
@@ -85,7 +85,7 @@ rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = F
     ust=unique(stratum)
     ind=c()
     for(i in ust){
-        ind<-c(ind, sample(which(stratum==i)), replace=replace)
+        ind<-c(ind, sample(which(stratum==i), replace=replace))
     }
     dataframe[ind,]
 }

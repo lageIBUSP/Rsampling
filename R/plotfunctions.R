@@ -40,6 +40,7 @@ splot <- function(p1, p2, highlight = TRUE, col.dif = c("black","grey"), groups.
 #' @param extreme logical. should extreme points be highlighted in the plot?
 #' @param vline logical. should the svalue be displayed as a vertical line?
 #' @param rejection logical. should the critical region be highlighted?
+#' @param ... further arguments to be passed to \code{hist} function.
 #' @seealso See the package vignettes for more information about how to interpret this graph
 #' @export
 dplot <- function(dist, svalue, pside=c("Two sided", "Greater", "Lesser"),
