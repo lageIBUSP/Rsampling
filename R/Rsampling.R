@@ -34,6 +34,7 @@
 #' Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User's Guide.
 #' \url{http://www.resample.com/content/software/excel/userguide/RSXLHelp.pdf}
 #' @export
+#' @import utils
 Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units", "within_rows", "within_columns"),
                        dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", 
                        fix.zeroes = FALSE, ...){
@@ -43,8 +44,11 @@ Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units",
     dots <- dots[names(dots) %in% names(formals(f1))]
     if(fix.zeroes) dots$FUN = "zfsample"
     res <- list()
+    if(!is.function(progress) && progress=="text") pb <- txtProgressBar(style=3)
     for(i in 1:ntrials)
         {
+          if(is.function(progress)) {if ((50*i) %% ntrials == 0) progress(i/ntrials) }
+          else if(progress=="text") setTxtProgressBar(pb, i/ntrials)
             res[[i]] <- statistics(do.call(f1, c(list(dataframe=dataframe), dots)))
         }
     #rlply(ntrials, statistics(do.call(f1, c(list(dataframe=dataframe), dots))), .progress = progress) %>%
@@ -52,6 +56,7 @@ Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units",
         {
           res <- simplify2array(res)
         }
+    if(!is.function(progress) && progress=="text") close(pb)
 return(res)
 }
 

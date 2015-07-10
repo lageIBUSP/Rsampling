@@ -18,9 +18,11 @@ within_columns(dataframe, cols = 1:ncol(dataframe), stratum = rep(1,
 normal_rand(dataframe, cols = 1:ncol(dataframe), stratum = rep(1,
   nrow(dataframe)), replace = FALSE, FUN = base::sample)
 
-rows_as_units(dataframe, stratum = rep(1, nrow(dataframe)), replace = FALSE)
+rows_as_units(dataframe, stratum = rep(1, nrow(dataframe)), replace = FALSE,
+  length.out = NULL)
 
-columns_as_units(dataframe, cols = 1:ncol(dataframe), replace = FALSE)
+columns_as_units(dataframe, cols = 1:ncol(dataframe), replace = FALSE,
+  length.out = NULL)
 }
 \arguments{
 \item{dataframe}{a dataframe with the data to be shuffled or resampled.}
@@ -33,6 +35,11 @@ columns_as_units(dataframe, cols = 1:ncol(dataframe), replace = FALSE)
 function \code{\link{zfsample}} is provided for sampling with fixed zeroes.}
 
 \item{stratum}{factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.}
+
+\item{length.out}{(integer) specifies the size of the resulting dataset.
+For columns_as_units, a data.frame with length.out columns will be returned, and for
+rows_as_units, a data.frame with length.out rows will be returned.
+Note that if length.out is larger than the relevant dimension, \code{replace} must also be specified.}
 }
 \value{
 a dataframe with the same structure of those input in \code{dataframe} with values randomized accordingly.
@@ -62,7 +69,10 @@ Only the placement of rows and columns in the dataframe change. The position of 
 All functions assemble the randomized values in a dataframe
 of the same configuration of the original. Columns that
 were not selected to be randomized with argument \code{cols} are then
-bound to the resulting dataframe.
+bound to the resulting dataframe. The order and names of the rows and columns are preserved, except if \code{length.out}
+is specified. In this case, the randomized rows/columns may be shifted to the end of the table.
+
+When both \code{stratum} and \code{length.out} are used, the function will try to keep the proportion of each strata close to the original.
 }
 
 \section{References}{

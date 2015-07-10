@@ -8,7 +8,11 @@
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
 #' @param FUN function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
 #' function \code{\link{zfsample}} is provided for sampling with fixed zeroes.
-#' 
+#' @param length.out (integer) specifies the size of the resulting dataset. 
+#' For columns_as_units, a data.frame with length.out columns will be returned, and for
+#' rows_as_units, a data.frame with length.out rows will be returned.
+#' Note that if length.out is larger than the relevant dimension, \code{replace} must also be specified.
+#'
 #' @section Details:
 #' 
 #' Each function performs as close as possible the corresponding options in Resampling Stats add-in for Excel
@@ -30,8 +34,10 @@
 #' All functions assemble the randomized values in a dataframe
 #' of the same configuration of the original. Columns that
 #' were not selected to be randomized with argument \code{cols} are then
-#' bound to the resulting dataframe.
+#' bound to the resulting dataframe. The order and names of the rows and columns are preserved, except if \code{length.out}
+#' is specified. In this case, the randomized rows/columns may be shifted to the end of the table.
 #'
+#' When both \code{stratum} and \code{length.out} are used, the function will try to keep the proportion of each strata close to the original.
 #'
 #' @return a dataframe with the same structure of those input in \code{dataframe} with values randomized accordingly.
 #' 
@@ -42,6 +48,19 @@
 
 #' @name basefunctions
 NULL
+
+# Helper function to calculate a distribution of sampling lengths within stratums, for when both stratum and length.out are specified
+rlength <- function (stratum, length.out) {
+	ust <- unique(stratum)
+	if(is.null(length.out)) return(sapply(ust, function(i) sum(stratum==i)))
+	tmp <- length.out * sapply(ust, function(i) sum(stratum==i)) / length(stratum)
+	tmp <- round(tmp)
+	if (sum(tmp) != length.out) {# one stratum is chosen at random to fix the rounding error
+		chosen <- sample(lenght(ust), 1)
+		tmp[ chosen ] <- length.out - sum(tmp[-chosen])
+	}
+    return(tmp)
+}
 
 #' @rdname basefunctions
 #' @export
@@ -80,20 +99,24 @@ normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(da
 
 #' @rdname basefunctions
 #' @export
-rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = FALSE){
+rows_as_units <- function(dataframe, stratum=rep(1,nrow(dataframe)), replace = FALSE, length.out=NULL){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     ust=unique(stratum)
+    rsize <- rlength(stratum, length.out)
     ind=c()
     for(i in ust){
-        ind<-c(ind, sample(which(stratum==i), replace=replace))
+        ind<-c(ind, sample(which(stratum==i), size=rsize[which(ust==i)], replace=replace))
     }
     dataframe[ind,]
 }
 
 #' @rdname basefunctions
 #' @export
-columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE){
+columns_as_units <- function(dataframe, cols=1:ncol(dataframe), replace = FALSE, length.out=NULL){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
-    dataframe[,cols] <- dataframe[,sample(cols, replace=replace)]
-        return(dataframe)
+    if (missing(length.out))
+      dataframe[,cols] <- dataframe[,sample(cols, replace=replace)]
+    else
+      dataframe <- cbind(dataframe[,-cols], dataframe[,sample(cols, size=length.out, replace=replace)])
+    return(dataframe)
 }
