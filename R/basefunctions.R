@@ -6,7 +6,6 @@
 #' @param cols columns of dataframe that should be selected to be resampled/shuffled. Defaults for all columns.
 #' @param replace (logical) should the data be permuted (FALSE) or resampled with replacement (TRUE) ?
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
-<<<<<<< HEAD
 #' @param length.out (integer) specifies the size of the resulting dataset. 
 #' For columns_as_units, a data.frame with length.out columns will be returned, and for
 #' rows_as_units, a data.frame with length.out rows will be returned.
