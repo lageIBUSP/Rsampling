@@ -6,11 +6,13 @@
 #' @param cols columns of dataframe that should be selected to be resampled/shuffled. Defaults for all columns.
 #' @param replace (logical) should the data be permuted (FALSE) or resampled with replacement (TRUE) ?
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
+#' @param FUN function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
+#' function \code{\link{zfsample}} is provided for sampling with fixed zeroes.
 #' @param length.out (integer) specifies the size of the resulting dataset. 
 #' For columns_as_units, a data.frame with length.out columns will be returned, and for
 #' rows_as_units, a data.frame with length.out rows will be returned.
 #' Note that if length.out is larger than the relevant dimension, \code{replace} must also be specified.
-
+#'
 #' @section Details:
 #' 
 #' Each function performs as close as possible the corresponding options in Resampling Stats add-in for Excel
@@ -62,32 +64,35 @@ rlength <- function (stratum, length.out) {
 
 #' @rdname basefunctions
 #' @export
-within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE){
+within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE, FUN=base::sample){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
-    dataframe[,cols] <- as.data.frame(t(apply(dataframe[,cols], 1, base::sample, replace=replace)))
+    dataframe[,cols] <- as.data.frame(t(apply(dataframe[,cols], 1, FUN, replace=replace)))
     return(dataframe)   
 }
 
 #' @rdname basefunctions
 #' @export
-within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
+within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), 
+                           replace = FALSE, FUN=base::sample){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     ust=unique(stratum)
     #dfs=dataframe[,cols]
     for(i in ust){
-        dataframe[stratum == i, cols]<- apply(dataframe[stratum == i,cols], 2, base::sample, replace=replace)
+        dataframe[stratum == i, cols]<- apply(dataframe[stratum == i,cols], 2, FUN, replace=replace)
     }
     return(dataframe)   
 }
 
 #' @rdname basefunctions
 #' @export
-normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), replace = FALSE){
+normal_rand <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow(dataframe)), 
+                        replace = FALSE, FUN=base::sample){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     ust=unique(stratum)
     #dfs=dataframe[,cols]
     for(i in ust){
-        dataframe[stratum == i, cols]<- sample(as.matrix(dataframe[stratum == i,cols]), replace=replace)
+        dataframe[stratum == i, cols] <- 
+          do.call(FUN, list(x=as.matrix(dataframe[stratum == i,cols]), replace=replace))
     }
     return(dataframe)   
 }

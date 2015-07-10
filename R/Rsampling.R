@@ -10,6 +10,8 @@
 #' The first argument should be the dataframe with the data and preferably should
 #' return a (named) vector, data frame, matrix or array.
 #' @param ntrials integer; number of randomizations to perform.
+#' @param fix.zeroes logical; for normal_rand, within_rows or within_columns, should zeroes in the dataframe
+#' be kept in place? See the help on \code{\link{zfsample}} for more details.
 #' @param simplify logical; should the result be simplified
 #' to a vector, matrix or higher dimensional array if possible? 
 #' @param ... further arguments to be passed to the randomization functions
@@ -34,11 +36,13 @@
 #' @export
 #' @import utils
 Rsampling <- function(type=c("normal_rand", "rows_as_units", "columns_as_units", "within_rows", "within_columns"),
-                       dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", ...){
+                       dataframe, statistics, ntrials=10000, simplify=TRUE, progress="text", 
+                       fix.zeroes = FALSE, ...){
     f1 <- match.fun(match.arg(type))
     dots <- list(...)
     ## get rid of arguments declared in dots not defined for function chosen in 'type'
     dots <- dots[names(dots) %in% names(formals(f1))]
+    if(fix.zeroes) dots$FUN = "zfsample"
     res <- list()
     if(!is.function(progress) && progress=="text") pb <- txtProgressBar(style=3)
     for(i in 1:ntrials)
