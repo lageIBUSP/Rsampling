@@ -6,13 +6,13 @@
 #' @param cols columns of dataframe that should be selected to be resampled/shuffled. Defaults for all columns.
 #' @param replace (logical) should the data be permuted (FALSE) or resampled with replacement (TRUE) ?
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
+#' @param FUN function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
+#' function \code{\link{zfsample}} is provided for sampling with fixed zeroes.
 #' @param length.out (integer) specifies the size of the resulting dataset. 
 #' For columns_as_units, a data.frame with length.out columns will be returned, and for
 #' rows_as_units, a data.frame with length.out rows will be returned.
 #' Note that if length.out is larger than the relevant dimension, \code{replace} must also be specified.
-#' @param FUN function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
-#' function \code{\link{zfsample}} is provided for sampling with fixed zeroes.
-#' 
+#'
 #' @section Details:
 #' 
 #' Each function performs as close as possible the corresponding options in Resampling Stats add-in for Excel
