@@ -11,3 +11,5 @@ export(within_rows)
 import(graphics)
 import(stats)
 import(utils)
+export(zfsample)
+
