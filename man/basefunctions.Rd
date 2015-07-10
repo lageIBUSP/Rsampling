@@ -9,13 +9,14 @@
 \alias{within_rows}
 \title{Shuffling and resampling functions}
 \usage{
-within_rows(dataframe, cols = 1:ncol(dataframe), replace = FALSE)
+within_rows(dataframe, cols = 1:ncol(dataframe), replace = FALSE,
+  FUN = base::sample)
 
 within_columns(dataframe, cols = 1:ncol(dataframe), stratum = rep(1,
-  nrow(dataframe)), replace = FALSE)
+  nrow(dataframe)), replace = FALSE, FUN = base::sample)
 
 normal_rand(dataframe, cols = 1:ncol(dataframe), stratum = rep(1,
-  nrow(dataframe)), replace = FALSE)
+  nrow(dataframe)), replace = FALSE, FUN = base::sample)
 
 rows_as_units(dataframe, stratum = rep(1, nrow(dataframe)), replace = FALSE,
   length.out = NULL)
@@ -29,6 +30,9 @@ columns_as_units(dataframe, cols = 1:ncol(dataframe), replace = FALSE,
 \item{cols}{columns of dataframe that should be selected to be resampled/shuffled. Defaults for all columns.}
 
 \item{replace}{(logical) should the data be permuted (FALSE) or resampled with replacement (TRUE) ?}
+
+\item{FUN}{function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
+function \code{\link{zfsample}} is provided for sampling with fixed zeroes.}
 
 \item{stratum}{factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.}
 

@@ -6,7 +6,7 @@
 \usage{
 Rsampling(type = c("normal_rand", "rows_as_units", "columns_as_units",
   "within_rows", "within_columns"), dataframe, statistics, ntrials = 10000,
-  simplify = TRUE, progress = "text", ...)
+  simplify = TRUE, progress = "text", fix.zeroes = FALSE, ...)
 }
 \arguments{
 \item{type}{character; the name of the randomization function to be applied to \code{dataframe}.
@@ -24,6 +24,9 @@ return a (named) vector, data frame, matrix or array.}
 to a vector, matrix or higher dimensional array if possible?}
 
 \item{progress}{which kind of progress bar should be used (currently unimplemented!)}
+
+\item{fix.zeroes}{logical; for normal_rand, within_rows or within_columns, should zeroes in the dataframe
+be kept in place? See the help on \code{\link{zfsample}} for more details.}
 
 \item{...}{further arguments to be passed to the randomization functions
 (e.g., \code{cols}, \code{replace}, \code{stratum}).}
