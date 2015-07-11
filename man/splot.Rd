@@ -16,8 +16,7 @@ splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"),
 
 \item{groups.names}{labels for the groups names; numeric or character vector of length two.}
 
-\item{...}{further arguments to be passed to \code{plot} function.
-(e.g., \code{cols}, \code{replace}, \code{stratum}).}
+\item{...}{further arguments to be passed to \code{plot} function.}
 }
 \description{
 Quick plot of paired differences, for exploratory purposes.

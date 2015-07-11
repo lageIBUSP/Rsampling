@@ -6,7 +6,7 @@
 #' @param col.dif color vector if \code{highlight = TRUE}
 #' @param groups.names labels for the groups names; numeric or character vector of length two.
 #' @param ... further arguments to be passed to \code{plot} function.
-#' (e.g., \code{cols}, \code{replace}, \code{stratum}).
+#'
 #' @export
 #' @import graphics
 #' @import stats
