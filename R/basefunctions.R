@@ -8,7 +8,7 @@
 #' @param stratum factor or integer vector that separates data in groups or strata. Randomizations will be performed within each level of the stratum. Needs at least two observations in each level. Default is a single-level stratum.
 #' @param FUN function used for the sampling procedure. The default is \code{\link[base]{sample}}, and a new
 #' function \code{\link{zfsample}} is provided for sampling with fixed zeroes.
-#' @param length.out (integer) specifies the size of the resulting dataset. 
+#' @param length.out (integer) specifies the size of the resulting data set. 
 #' For columns_as_units, a data.frame with length.out columns will be returned, and for
 #' rows_as_units, a data.frame with length.out rows will be returned.
 #' Note that if length.out is larger than the relevant dimension, \code{replace} must also be specified.
@@ -29,7 +29,7 @@
 #' to cells of the row/column they were sampled.
 #' \item \code{rows_as_units} and \code{columns_as_units} also correspond to the options with the same names.
 #' Each row or column \code{dataframe} is shuffled or resampled as whole.
-#' Only the placement of rows and columns in the dataframe change. The position of values in each line/column remains the same. 
+#' Only the placement of rows and columns in the dataframe change. The values and their position within each row/column remains the same. 
 #' }
 #' All functions assemble the randomized values in a dataframe
 #' of the same configuration of the original. Columns that
@@ -49,7 +49,7 @@
 #' @name basefunctions
 NULL
 
-# Helper function to calculate a distribution of sampling lengths within stratums, for when both stratum and length.out are specified
+# Helper function to calculate a distribution of sampling lengths within strata, for when both stratum and length.out are specified
 rlength <- function (stratum, length.out) {
 	ust <- unique(stratum)
 	if(is.null(length.out)) return(sapply(ust, function(i) sum(stratum==i)))
