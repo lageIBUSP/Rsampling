@@ -1,6 +1,6 @@
 # Rsampling - Resampling Stats functions ported to R
 
-Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excell worksheets.
+Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excel worksheets.
 It adopts a simple workflow for significance tests:
 
 1. Define a statistic of interest that can be calculated from a data table;
@@ -13,7 +13,7 @@ This is the probability of the rejection of the null hypothesis be an error
 (probability of Type I error).
 
 This package intends to translate this logic for R for teaching purposes.
-Keeping the original workflow is favoured over performance.
+Keeping the original workflow is favored over performance.
 
 ## Installation:
 
