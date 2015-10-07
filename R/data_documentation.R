@@ -91,3 +91,18 @@
 #' \url{http://ecologia.ib.usp.br/curso/2013/pdf/PO4-2.pdf}
 #' @encoding utf-8
 "rhyzophora"
+
+#' Aphids recorded on goldenrods
+#'
+#' Occurrences of aphids of the genus Dactynotus on plants of the genus Solidago in Canada
+#'
+#' @format A dataframe with 10 rows (aphid species of the genus Dactynotus) and 12 columns (plant species of the genus Solidago).
+#' Each entry is the number of records of a given aphid species on a plant species.
+#' @section Details:
+#' Data from a field survey by E.C. Pielou in Ontario to exemplify a method to calculate niche overlap and niche width.
+#' The niche overlap gauges the overall similarity of the plant ranges used by the aphids. The niche width expresses how diverse
+#' is the average diversity of plants used by the aphids.
+#' @source
+#' Pielou, E.C. 1972. Niche width and niche overlap: a method for measuring them. Ecology, 53: 687--692.
+#' @encoding utf-8
+"pielou"
