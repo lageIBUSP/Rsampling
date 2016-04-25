@@ -1,7 +1,7 @@
 ---
 title: "RRR: Reproduzindo o Resampling com Rsampling"
 author: "Paulo Inácio Prado"
-date: "Junho de 2015"
+date: "Outubro de 2015"
 output:
   rmarkdown::html_vignette:
     fig_width: 5
@@ -85,6 +85,7 @@ Para mais detalhes sobre os dados e o estudo que os produziu consulte a
 página de ajuda (`?embauba`).
 
 ### Hipótese do estudo
+
 A hipótese deste estudo é
 que as formigas removem lianas das embaúbas onde estão suas colônias.
 A previsão é que embaúbas vermelhas seriam menos infestadas por lianas do que as
@@ -96,6 +97,7 @@ infestadas na amostra:
 tapply(embauba$with.vines, embauba$morphotype, mean)
 ```
 ### Hipótese nula
+
 A hipótese nula é de que as proporções de infestação são iguais
 na população de onde vieram as amostras.
 Sob esta hipótese, uma liana tem a mesma chance de estar em uma embaúba
@@ -105,6 +107,7 @@ embaralhando as presenças de lianas entre plantas
 na tabela de dados.
 
 ### Estatística de interesse
+
 A cada simulação temos que calcular nossa
 **estatística de interesse**, que é a
 a diferença de infestação
@@ -162,7 +165,7 @@ mais extremos da distribuição da estatística sob a hipótese nula.
 Então se a estatística observada estiver na região cinza não rejeitamos
 a hipótese nula. Esta é a chamada \emph{região de aceitação} de H0.
 Como o valor observado (linha vermelha) está fora da região de aceitação,
-podemos rejeitá-la.
+podemos rejeitar H0.
 Você também pode verificar isso com um teste lógico no
 R:
 
@@ -202,6 +205,7 @@ splot(azteca$extract.new, azteca$extract.old,
 ```
 
 ### Hipótese nula
+
 A hipótese nula é de que o recrutamento provocado pelos estratos
 é o mesmo. Note que para controlar outras fontes de variação o
 experimento foi pareado.
@@ -210,6 +214,7 @@ embaralhar o número de formigas recrutadas **dentro** de cada par de
 folhas.
 
 ### Estatística de interesse
+
 A cada simulação temos que calcular nossa
 **estatística de interesse**, que é a
 média da diferença das folhas de cada par.
@@ -329,6 +334,7 @@ Esta expectativa tem a premissa que cada inspeção
 é um evento independente.
 
 ### Estatística de interesse
+
 A cada simulação temos que calcular nossa
 **estatística de interesse**, que é a
 média do número de inspeções em que as aranhas estavam sobre folhas com tricomas.
@@ -444,7 +450,7 @@ diferentes hipóteses nulas. Então mantemos a mesma do
 exemplo anterior: média do número de inspeções em que
 as aranhas foram registradas nas folhas com tricomas.
 
-Mas como a o *data frame* que será aleatorizado
+Mas como o *data frame* que será aleatorizado
 mudou, criamos uma nova função no R para
 calcular a estatística de interesse
 
@@ -465,7 +471,7 @@ peu.r2 <- Rsampling(type = "within_rows", dataframe = peu.H0b,
                    statistics = peu.ei2, ntrials = 1000)
 ```
 
-A distribuição nula mudou bastante de forma comparada com a seção anterior.
+A distribuição nula mudou bastante de forma, comparada com a seção anterior.
 Mas uma média igual ou maior que a observada ainda foi muito rara:
 
 ```{r peucetia distribuicao nula 2, fig.cap="Distribuição do número médio de inspeções em que as aranhas estavam em folhas com tricomas, em 1000 simulações da hipótese nula de ausência de preferência por substrato, considerando tendência das aranhas permanecerem onde estão. A linha vermelha indica a média observada."}
@@ -484,6 +490,99 @@ sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
 ```
 
 **Conclusão:** rejeita-se a hipótese nula (p < 0,05).
+
+
+## Zeros estruturais
+
+Em alguns conjuntos de dados há observações com frequência zero
+que são considerados impossíveis de ocorrer ou de se observar. Por exemplo,
+o *dataframe* `pielou` tem o número de registros de dez
+espécies de pulgões em doze espécies de plantas do gênero *Solidago*.
+
+```{r pielou inspecionando objeto}
+pielou
+```
+
+Para saber mais sobre este conjunto de dados consulte a página de ajuda (`?pielou`).
+Há várias ocorrências com frequência zero.
+Vamos simular uma hipótese nula supondo que
+essas frequências são estruturais, ou seja, que indicam
+associações inseto-planta que não podem ocorrer.
+
+### Hipótese do estudo
+
+Nossa hipótese de estudo é que há ou houve partilha de recursos entre as espécies
+de pulgões. Neste caso, as associações observadas devem ter resultado em redução da
+sobreposição de nichos dos insetos.
+
+### Hipótese nula
+
+Nossa hipótese nula é que a sobreposição de nicho não difere da esperada
+caso as ocorrências dos pulgões nas plantas sejam independentes.
+
+### Estatística de interesse
+
+Esses dados foram usados para exemplificar um cálculo de amplitude e sobreposição
+de nichos. A expressão proposta pela autora
+para a sobreposição média de nichos é a diferença entre
+a índice de Brillouin de todos os valores e da soma das colunas da
+tabela. O índice de Brillouin é uma medida de diversidade em uma coleção de valores $x_i$:
+
+$$H = \frac{1}{N} \log N! \ - \ \frac{1}{N} \sum \log x_i !$$
+
+Onde $N = \sum x_i$. Vamos criar uma função para fazer este cálculo
+
+```{r pielou indice de brillouin}
+brillouin <- function(x, base=10) {
+    N <- sum(x)
+    lfactorial(N)/(log(base)*N)  -  sum(lfactorial(x)/log(base))/N
+}
+```
+E então criamos um função para o cálculos da estatística de interesse
+
+```{r pielou estatistica brillouin}
+pielou.ei <- function(dataframe)
+    brillouin( dataframe ) - brillouin( apply(dataframe,2,sum) )
+```
+Cujo valor é
+
+```{r pielou estatistica de interesse}
+pielou.ei(pielou)
+```
+
+### Distribuição da estatística de interesse sob a hipótese nula
+
+Para simular nossa hipótese nula, embaralhamos os números de ocorrências registradas
+de cada espécie de pulgão entre as plantas. Com isso mantemos criamos uma situação em que
+as hieraquias de preferência de cada espécie de pulgão são mantidas, mas tornam-se independentes.
+Além disso, usamos a opção `fix.zeroes = TRUE` para indicar que os valores zero não devem
+ser embaralhados.
+
+```{r , results="hide"}
+pielou.r1 <- Rsampling(type = "within_rows", dataframe = pielou,
+                   statistics = pielou.ei, ntrials = 1000, fix.zeroes = TRUE)
+```
+
+O valor observado é maior do que a maioria dos valores na distribuição nula. Como nossa
+hpótese é unicaudal (sobreposição observada menor do que o esperado pelo acaso),
+o valor observado está na região de aceitação da hipótese nula.
+
+```{r pielou nula 2, fig.cap="Distribuição da sobreposição média de uso de plantas hospedeiras por espécies de pulgões, em 1000 simulações da hipótese nula de independência das espécies de inseto pelas plantas. As plantas sem ocorrência observadas dos pulgões foram consideradas não disponíveis (zeros estruturais). A linha vermelha indica a média observada."}
+dplot(pielou.r1, svalue = pielou.ei(pielou), pside="Lesser",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse", xlim=c(0.3,0.6))
+```
+
+### Decisão: rejeitamos a hipótese nula?
+
+O valor observado da estatística de interesse está na região de aceitação.
+Aplicando nosso critério de significância:
+
+```{r  teste 2} 
+sum(pielou.r1 <= pielou.ei(pielou))/1000 < 0.05
+```
+
+**Conclusão:** não se rejeita a hipótese nula (p > 0,05).
 
 
 [^2]: Statistics.com LCC. 2009. Resampling Stats Add-in for Excel User’s Guide.

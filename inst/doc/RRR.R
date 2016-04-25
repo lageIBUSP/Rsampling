@@ -140,3 +140,31 @@ dplot(peu.r2, svalue = peu.ei2(peu.H0b), pside="Greater",
 ## ----peucetia teste 2----------------------------------------------------
 sum(peu.r2 >= peu.ei(peucetia))/1000 < 0.05
 
+## ----pielou inspecionando objeto-----------------------------------------
+pielou
+
+## ----pielou indice de brillouin------------------------------------------
+brillouin <- function(x, base=10) {
+    N <- sum(x)
+    lfactorial(N)/(log(base)*N)  -  sum(lfactorial(x)/log(base))/N
+}
+
+## ----pielou estatistica brillouin----------------------------------------
+pielou.ei <- function(dataframe)
+    brillouin( dataframe ) - brillouin( apply(dataframe,2,sum) )
+
+## ----pielou estatistica de interesse-------------------------------------
+pielou.ei(pielou)
+
+## ---- results="hide"-----------------------------------------------------
+pielou.r1 <- Rsampling(type = "within_rows", dataframe = pielou,
+                   statistics = pielou.ei, ntrials = 1000, fix.zeroes = TRUE)
+
+## ----pielou nula 2, fig.cap="Distribuição da sobreposição média de uso de plantas hospedeiras por espécies de pulgões, em 1000 simulações da hipótese nula de independência das espécies de inseto pelas plantas. As plantas sem ocorrência observadas dos pulgões foram consideradas não disponíveis (zeros estruturais). A linha vermelha indica a média observada."----
+dplot(pielou.r1, svalue = pielou.ei(pielou), pside="Lesser",
+      main = "Distribuição da estatística de interesse sob H0",
+      xlab = "Estatística de interesse", xlim=c(0.3,0.6))
+
+## ----teste 2-------------------------------------------------------------
+sum(pielou.r1 <= pielou.ei(pielou))/1000 < 0.05
+
