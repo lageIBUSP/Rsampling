@@ -56,7 +56,7 @@ rlength <- function (stratum, length.out) {
 	tmp <- length.out * sapply(ust, function(i) sum(stratum==i)) / length(stratum)
 	tmp <- round(tmp)
 	if (sum(tmp) != length.out) {# one stratum is chosen at random to fix the rounding error
-		chosen <- sample(lenght(ust), 1)
+		chosen <- sample(length(ust), 1)
 		tmp[ chosen ] <- length.out - sum(tmp[-chosen])
 	}
     return(tmp)

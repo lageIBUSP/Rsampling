@@ -46,6 +46,7 @@ splot <- function(p1, p2, highlight = TRUE, col.dif = c("black","grey"), groups.
 #' @seealso See the package vignettes for more information about how to interpret this graph
 #' @export
 #' @import graphics
+#' @import grDevices
 dplot <- function(dist, svalue, pside=c("Two sided", "Greater", "Lesser"),
                   extreme = TRUE, vline = TRUE, rejection = TRUE, ...) {
   # argument handling and default values
