@@ -56,7 +56,7 @@ rlength <- function (stratum, length.out) {
 	tmp <- length.out * sapply(ust, function(i) sum(stratum==i)) / length(stratum)
 	tmp <- round(tmp)
 	if (sum(tmp) != length.out) {# one stratum is chosen at random to fix the rounding error
-		chosen <- sample(lenght(ust), 1)
+		chosen <- sample(length(ust), 1)
 		tmp[ chosen ] <- length.out - sum(tmp[-chosen])
 	}
     return(tmp)
@@ -66,6 +66,7 @@ rlength <- function (stratum, length.out) {
 #' @export
 within_rows <- function(dataframe, cols=1:ncol(dataframe), replace=FALSE, FUN=base::sample){
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
+    if(length(cols) < 2) stop ("You need to specify at least 2 columns for within_rows")
     dataframe[,cols] <- as.data.frame(t(apply(dataframe[,cols], 1, FUN, replace=replace)))
     return(dataframe)   
 }
@@ -77,9 +78,14 @@ within_columns <- function(dataframe, cols=1:ncol(dataframe), stratum=rep(1,nrow
     if(class(dataframe)!="data.frame") stop ("the 1st argument is not of class 'data.frame'")
     ust=unique(stratum)
     #dfs=dataframe[,cols]
-    for(i in ust){
-        dataframe[stratum == i, cols]<- apply(dataframe[stratum == i,cols], 2, FUN, replace=replace)
-    }
+    if (length(cols) > 1)  
+        for(i in ust){
+            dataframe[stratum == i, cols]<- apply(dataframe[stratum == i,cols], 2, FUN, replace=replace)
+        }
+    else
+        for(i in ust){
+            dataframe[stratum == i, cols]<- FUN(dataframe[stratum == i,cols], replace=replace)
+        }
     return(dataframe)   
 }
 
