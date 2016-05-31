@@ -286,7 +286,7 @@ Nos testes unicaudais a região de aceitação é toda a distribuição nula exc
 
 Mas pode interessar o teste de que há diferenças, sem especificar sua direção. Por exemplo,
 o conhecimento prévio poderia indicar a hipótese de que extratos de folhas jovens e velhas devem recrutar
-números diferentes de formigas, mas sem a expectativa de qual extrato recutaria mais. Este é um caso
+números diferentes de formigas, mas sem a expectativa de qual extrato recrutaria mais. Este é um caso
 de teste **bicaudal**, quando a região de aceitação é o centro da distribuição nula, exceto seus
 2,5% mais extremos de cada lado:
 
@@ -301,7 +301,7 @@ dplot(azt.r, svalue = azt.ei(azteca), pside="Two sided",
 O dataframe `peucetia` tem os dados de um experimento de escolha de substrato
 por aranhas do gênero *Peucetia*.
 Vinte e sete aranhas foram mantidas em placas de Petri
-cobertas com dois substratos (folhas com e sem tricomas gladulosos).
+cobertas com dois substratos (folhas com e sem tricomas glandulosos).
 Em seis inspeções a cada placa registrou-se
 se cada aranha estava sobre as folhas com tricomas.
 
@@ -314,7 +314,7 @@ Saiba mais sobre os dados em sua página de ajuda (`?peucetia`).
 
 A hipótese do estudo é que
 as aranhas preferem caçar em plantas
-com pêlos glandulosos, onde a captura
+com pelos glandulosos, onde a captura
 de presas é mais fácil.
 A previsão para o experimento é
 que as aranhas devem estar a maior parte
@@ -563,7 +563,7 @@ pielou.ei(pielou)
 
 Para simular nossa hipótese nula, embaralhamos os números de ocorrências registradas
 de cada espécie de pulgão entre as plantas. Com isso mantemos criamos uma situação em que
-as hieraquias de preferência de cada espécie de pulgão são mantidas, mas tornam-se independentes.
+as hierarquias de preferência de cada espécie de pulgão são mantidas, mas tornam-se independentes.
 Além disso, usamos a opção `fix.zeroes = TRUE` para indicar que os valores zero não devem
 ser embaralhados.
 
@@ -573,7 +573,7 @@ pielou.r1 <- Rsampling(type = "within_rows", dataframe = pielou,
 ```
 
 O valor observado é maior do que a maioria dos valores na distribuição nula. Como nossa
-hpótese é unicaudal (sobreposição observada menor do que o esperado pelo acaso),
+hipótese é unicaudal (sobreposição observada menor do que o esperado pelo acaso),
 o valor observado está na região de aceitação da hipótese nula.
 
 ```{r pielou nula 2, fig.cap="Distribuição da sobreposição média de uso de plantas hospedeiras por espécies de pulgões, em 1000 simulações da hipótese nula de independência das espécies de inseto pelas plantas. As plantas sem ocorrência observadas dos pulgões foram consideradas não disponíveis (zeros estruturais). A linha vermelha indica a média observada."}

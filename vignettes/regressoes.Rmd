@@ -222,7 +222,7 @@ lm(n.roots ~ canopy.trunk, data=rhyzophora)
 Ou seja, a cada aumento de 100 unidades da variável de torque
 em média
 `r round(coef(lm(n.roots ~ canopy.trunk, data=rhyzophora))[[2]]*100,1)`
-raízes são adiciondas.
+raízes são adicionadas.
 
 Note que esta proporcionalidade se mantém se adicionarmos qualquer
 constante. Por isso o modelo linear é expresso por
