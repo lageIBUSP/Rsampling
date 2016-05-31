@@ -1,0 +1,336 @@
+---
+title: "Replicating Resampling with Rsampling - Regressions and ANCOVA"
+author: "Paulo Inácio Prado, Alexandre Oliveira, André Chalom"
+date: "June 2016"
+output:
+  rmarkdown::html_vignette:
+    fig_width: 5
+    fig_height: 5
+    fig_caption: true
+vignette: >
+  %\VignetteIndexEntry{Regression and ANOVA}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+    collapse=TRUE,
+    comment = NA,
+    prompt = TRUE
+    )
+set.seed(42)
+```
+
+## Installation
+
+Rsampling is hosted on CRAN. To install it use
+
+```{r installation CRAN, eval=FALSE}
+install.packages("Rsampling")
+```
+You can also install from the GitHub site, where the project is hosted.
+To do that use the devtools package function `install_github`:
+
+```{r installation GitHub, eval=FALSE}
+library(devtools)
+install_github(repo = 'lageIBUSP/Rsampling')
+```
+
+After installation load the package
+
+```{r load library}
+library(Rsampling)
+```
+
+## Regression examples
+
+The data frame `rhyzophora` contains measurements of mangrove trees
+growing in two sites that differ in the soil stability (more or less muddy soils).
+
+```{r inspecting object rhyzophora}
+head(rhyzophora)
+summary(rhyzophora)
+```
+Learn more about the data at its help page (`?rhyzophora`).
+
+### Study Hypothesis
+
+The hypothesis is that trees at more unstable soils
+will allocate more biomass in supporting structures.
+One possible prediction is that the relation between the tree's
+torque [^1] and the allocation in supporting roots is different
+in the two kinds of soils.
+To express the torque the ratio between
+the areas of the canopy and the trunk cross-section was used.
+The allocation in supporting roots was expressed in number of
+supporting roots and the area at groud level encompassed by these roots.
+
+The data suggests a positive relation between
+torque and number of roots.
+Plus, the points of the sampled trees at the two kinds of soil
+seems to separate in the plot:
+
+```{r plot rhyzophora, fig.cap = "Relation between number of supporting roots and the ratio canopy area / trunk area for mangrove trees at two sites that differ in the soil instability (medium and high instability)."}
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="canopy area / trunk area", ylab="root number")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", pch=19)
+legend("topright", c("Medium","High"), title="Soil instability", pch=c(1,19))
+```
+
+This pattern suggests that the relationship between torque and number os roots differ between the two sites.
+
+### Shuffling rows within the strata
+
+#### Null hypothesis
+
+In order to illustrate how to run ranodmization restricted to strata we will test
+the most basic null hypothesis: that there is no relation at none
+of the soil types.
+
+
+#### Statistic of interest
+
+We have a
+**statistic of interest** for each
+soil type, which is
+the slope of the linear regressions:
+
+```{r rhyzophora statistcs of interest}
+rhyz.ei <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="medium")
+    m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="high")
+    c(med = coef(m1)[[2]],
+      high = coef(m2)[[2]])
+}
+## Observed values
+rhyz.ei(rhyzophora)
+```
+
+#### Distribution of the statistics under the null hypothesis
+
+We simulate the null hypothesis shuffling the values of the torque
+variable between trees of the same soil type:
+
+```{r rhyzophora resampling, results="hide"}
+rhyz.r <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei, stratum = rhyzophora$soil.instability,
+                        cols = 2, ntrials = 1000)
+```
+
+The argument `stratum = rhyzophora$soil.instability`,
+tells that the shuffling of values (at column 2) must be done within each
+soil type.
+
+When there's more than one statistic of interest, the function
+`Rsampling` returns a matrix where which line is a statistic and columns
+are the replications.
+
+
+```{r rhyzophora resampling results}
+rhyz.r[,1:3]
+```
+
+Values which are equal or bigger than the observed slopes see very rare at
+the value distribution under the null hypothesis:
+
+```{r rhyzophora null distributions, fig.cap="Frequency distributions of the slope of linear regressions of number of supporting roots to torque in mangrove trees, under the null hypothesis that there is not a relationship. The trees were measured at two sites, and the null hypothesis was simulated shuffling y-values (n of roots) among trees at each site. Red lines show the observed values of the slopes, and the acceptance region of the null hypothesis at 5% is in grey. Absolute values large than the observed are depicted in orange. Results from 1000 simulations. ", fig.width=7.5}
+par(mfrow=c(1,2))
+dplot(rhyz.r[1,], svalue=rhyz.ei(rhyzophora)[1], pside="Greater",
+      main="Less unstable soil", xlab="Regression slope")
+dplot(rhyz.r[2,], svalue=rhyz.ei(rhyzophora)[2], pside="Greater",
+      main="More unstable soil", xlab="Regression slope")
+par(mfrow=c(1,1))
+```
+#### Decision: should we reject the null hypothesis?
+
+The observed slopes for the two groups are out of the region of acceptance for
+the one-tailed null hypothesis [^2] at 5% significance level.
+
+```{r rhyzophora teste}
+sum(rhyz.r[1,] >= rhyz.ei(rhyzophora)[1])/1000 < 0.05
+sum(rhyz.r[2,] >= rhyz.ei(rhyzophora)[2])/1000 < 0.05
+```
+
+**Conclusion:** the null hypothesis is rejected (p < 0,05) at both cases.
+
+### Comparing slopes
+
+Our main study hypothesis was that the relation
+between torque and support is different between the two kinds of soils.
+Assuming the linear relation exists, the difference can occur in two ways:
+different slopes or same slope but different intercepts.
+
+#### Null hypothesis
+We start by testing the null hypothesis that the linear the slopes of the
+linear regressions does not differ between soil types.
+
+#### Statistic of interest
+Our statistic of interest is the difference between slopes, which
+seems small:
+
+```{r rhyzophora diff between slopes}
+rhyz.ei2 <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="medium")
+    m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
+             subset=soil.instability=="high")
+    coef(m1)[[2]] - coef(m2)[[2]]
+}
+
+## Observed values
+rhyz.ei2(rhyzophora)
+```
+#### Null hypothesis simulation 
+We simulate our new null hypothesis shuffling the trees
+between soil types:
+
+```{r rhyzophora resampling slopes, results="hide"}
+rhyz.r2 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei2,
+                        cols = 1, ntrials = 1000)
+```
+
+#### Decision: should we reject the null hypothesis?
+
+In this case, we cannot reject the null hypothesis at the 5% significance level:
+
+```{r rhyzophora 2nd teste}
+sum(rhyz.r2 > rhyz.ei2(rhyzophora))/1000 < 0.05
+```
+
+### Comparing intercepts
+
+We have decided above to accept the null hypothesis that the slopes are equal.
+The biological interpretation of this fact is that at both soil types
+the number of support roots follows the same proportionality relation with
+the torque variable.
+
+This proportionality factor is the slope of the linear regressions
+applied to **all** trees, which we estimate by adjusting the regression to whole data set:
+
+```{r rhyzophora common slope}
+lm(n.roots ~ canopy.trunk, data=rhyzophora)
+```
+That is, to each increment of 100 units of the torque variable in average
+`r round(coef(lm(n.roots ~ canopy.trunk, data=rhyzophora))[[2]]*100,1)`
+roots are added.
+
+This proportionality is maintained if we add any constant.
+For this reason the linear model is expressed by:
+
+$$E[Y] = \alpha + \beta X$$
+
+Where $E[Y]$ is the expected value of the response variable (root number),
+$\beta$ is the slope or proportionality factor, and $X$
+is the predictor variable (torque).
+The intercept $\alpha$ does not change the proportionality,
+rather, it only moves the regression line upwards or downwards.
+In other words, lines with same slope but different intercepts are
+parallel.
+In our case, different intercepts with the same slope express that trees with the same canopy/trunk
+ratio **always** have more roots at one of the soil types.
+
+#### Null hypothesis
+
+Now our null hypothesis is that the intercepts of the linear regressions do not differ
+between soil types.
+If this is true, the linear regression adjusted to all data would
+predict well the number of roots for all trees.
+If not, the points of one soil type will tend to fall below the line,
+while the points for the other soil type will fall above it.
+
+We already adjusted the regression for the whole data set,
+and then we can add the regression line to the plot:
+
+
+```{r plot rhyzophora single regression, fig.cap = "Relation between the number of supporting roots and the ratio canopy area / trunk area for mangrove trees at two sites that differ in the soil instability (medium and high instability). Also shown the line of the linear regression fitted to the whole data set."}
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="canopy area / trunk area", ylab="number of roots")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", pch=19)
+abline(lm(n.roots ~ canopy.trunk, data=rhyzophora))
+legend("topright", c("Medium","High"), title="Soil instability", pch=c(1,19))
+```
+
+Indee it seems that this regression underestimates the number of roots of
+the trees sampled at the site with the most unstable soil, and does the opposite for the trees
+at sampled the site with less unstable soil. For this reason, the residuals of this regression
+are positive for trees sampled at unstable soil and negative for the rest.
+
+#### Statistic of interest
+
+Our statistic of interest is the difference between the
+means of the residual of trees at each soil type.
+The residuals are calculated from the regression applied to all data:
+
+```{r statistics of interest 3 rhyzophora}
+rhyz.ei3 <- function(dataframe){
+    m1 <- lm(n.roots ~ canopy.trunk, data=dataframe)
+    res.media <- tapply(resid(m1), dataframe$soil.instability, mean)
+    res.media[[1]] - res.media[[2]]
+}
+## Observed values
+rhyz.ei3(rhyzophora)
+```
+
+#### Simulating the null hypothesis
+
+We simulate the null hypothesis in the same way as before: shuffling
+the trees between soil types (first row of the data table)
+
+```{r rhyzophora resampling intercept, results="hide"}
+rhyz.r3 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
+                    statistics = rhyz.ei3,
+                        cols = 1, ntrials = 1000)
+```
+
+#### Decision: should we reject the null hypothesis?
+
+In this case we reject the null hypothesis:
+
+```{r rhyzophora 3rd teste}
+sum(rhyz.r3 > rhyz.ei3(rhyzophora))/1000 < 0.05
+```
+
+Therefore, there is one intercept for each soil type.
+We can estimate them including the soil's effect on the regression model [^3]:
+
+
+```{r rhyzophora ancova}
+(rhyz.ancova <- lm(n.roots ~ soil.instability + canopy.trunk  -1,
+                   data=rhyzophora))
+```
+
+And then we can add the lines for the two groups to the plot:
+
+```{r plot rhyzophora ancova, fig.cap = "Relation between number of supporting roots and the ratio canopy area / trunk area for mangrove trees at two sites that differ in the soil instability (medium and high instability). Also shown the line sof the regressions fitted to each site, but with a common slope."}
+cfs <- coef(rhyz.ancova)
+plot(n.roots ~ canopy.trunk, data=rhyzophora, type="n",
+     xlab="canopy area / trunck area", ylab="number of roots")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="medium", col="blue")
+points(n.roots ~ canopy.trunk, data=rhyzophora,
+       subset=soil.instability=="high", col="red")
+abline(cfs[1],cfs[3], col="red")
+abline(cfs[2],cfs[3], col="blue")
+legend("topright", c("Medium","High"), title="Soil instability", col=c("blue", "red"))
+```
+
+[^1]: Roughly, for our purpose the torque express the force to bring the tree down.
+
+[^2]: As it doesn't make sense, in this case, to expect the number of roots to decrease with the torque variable, we did the one-tailed test.
+
+[^3]: Technical detail: we add the term `-1` to the regression fromula in order to
+explicit to R that we want the estimates of each intercept. Otherwise,
+we'd get the estimation the intercept of one group and the difference 
+to the intercept of the other group.
+
+

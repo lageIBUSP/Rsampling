@@ -35,7 +35,7 @@
 #' @section Details:
 #' Two morphotypes of Cecropia trees differ in the occupancy by ant colonies.
 #' Ants attack and drive out other insects that get to the trees.
-#' To test if this protection also affect infestation by vines, trees of similar size of both morphs
+#' To test if this protection also affects infestation by vines, trees of similar size of both morphs
 #' were sampled and inspected for the presence of vines.
 #' @source
 #' Mello, T.J. 2012. Infestação por lianas e comportamento de poda por formigas em \emph{Cecropia}

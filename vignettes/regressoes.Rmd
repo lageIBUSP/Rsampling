@@ -2,13 +2,13 @@
 title: "RRRR: Reproduzindo o Resampling com Rsampling para Regressões"
 author: "Paulo Inácio Prado"
 date: "Junho de 2015"
-output:
+output: 
   rmarkdown::html_vignette:
     fig_width: 5
     fig_height: 5
     fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Ancova com o Rsampling}
+  %\VignetteIndexEntry{Regressão e Ancova com o Rsampling (PT-BR)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -23,14 +23,23 @@ set.seed(42)
 ```
 
 ## Instalação
-O Rsampling está hospedado no GitHub.
-Para instalá-lo use a função `install_github` do pacote devtools:
+
+O Rsampling está no repositório oficial de pacotes do R (CRAN).
+Para instalá-lo use
+
+```{r installation CRAN, eval=FALSE}
+install.packages("Rsampling")
+```
+
+Você pode também instalar versão de desenvolvimento,
+que está no GitHub. Para isso você vai precisar da função `install_github` do pacote devtools:
 
 ```{r installation, eval=FALSE}
 library(devtools)
 install_github(repo = 'lageIBUSP/Rsampling')
 ```
-E então carregue o pacote
+
+Depois de instalar o pacote carregue-o em sua seção de R com 
 
 ```{r load library}
 library(Rsampling)

@@ -8,7 +8,7 @@ output:
     fig_height: 5
     fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Introdução ao Rsampling}
+  %\VignetteIndexEntry{Introdução ao Rsampling (PT-BR)}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -59,14 +59,23 @@ as funcionalidades.
 
 
 ## Instalação
-O pacote **Rsampling** está hospedado no GitHub.
-Para instalá-lo use a função `install_github` do pacote devtools:
+
+O Rsampling está no repositório oficial de pacotes do R (CRAN).
+Para instalá-lo use
+
+```{r installation CRAN, eval=FALSE}
+install.packages("Rsampling")
+```
+
+Você pode também instalar versão de desenvolvimento,
+que está no GitHub. Para isso você vai precisar da função `install_github` do pacote devtools:
 
 ```{r installation, eval=FALSE}
 library(devtools)
 install_github(repo = 'lageIBUSP/Rsampling')
 ```
-E então carregue com
+
+Depois de instalar o pacote carregue-o em sua seção de R com 
 
 ```{r load library}
 library(Rsampling)

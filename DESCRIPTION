@@ -1,6 +1,6 @@
 Package: Rsampling
 Title: Ports the workflow of "Resampling Stats" add-in to R
-Version: 0.0.0.5
+Version: 0.0.1
 Authors@R: c(
 	   person("Paulo", "Prado", , "prado@ib.usp.br", role = c("aut", "cre")),
 	   person("Andr\'e", "Chalom", , "andrechalom@gmail.com", role = c("aut")),

@@ -26,7 +26,7 @@ Presence/absence data of vines on Cecropia trees of two morphotypes.
 
 Two morphotypes of Cecropia trees differ in the occupancy by ant colonies.
 Ants attack and drive out other insects that get to the trees.
-To test if this protection also affect infestation by vines, trees of similar size of both morphs
+To test if this protection also affects infestation by vines, trees of similar size of both morphs
 were sampled and inspected for the presence of vines.
 }
 \keyword{datasets}

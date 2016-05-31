@@ -6,6 +6,9 @@ knitr::opts_chunk$set(
     )
 set.seed(42)
 
+## ----installation CRAN, eval=FALSE---------------------------------------
+#  install.packages("Rsampling")
+
 ## ----installation, eval=FALSE--------------------------------------------
 #  library(devtools)
 #  install_github(repo = 'lageIBUSP/Rsampling')
