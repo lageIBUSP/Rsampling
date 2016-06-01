@@ -18,9 +18,17 @@ Keeping the original workflow is favored over performance.
 ## Installation:
 
 ```r
+install.packages("Rsampling")
+```
+
+Or, for the latest development snapshot:
+
+```r
 library(devtools)
 install_github(repo = 'lageIBUSP/Rsampling')
 ```
+
+
 
 ## See also
 

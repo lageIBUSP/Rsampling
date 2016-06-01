@@ -100,7 +100,7 @@ soil type, which is
 the slope of the linear regressions:
 
 ```{r rhyzophora statistics of interest}
-rhyz.ei <- function(dataframe){
+rhyz.si <- function(dataframe){
     m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
              subset=soil.instability=="medium")
     m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
@@ -109,7 +109,7 @@ rhyz.ei <- function(dataframe){
       high = coef(m2)[[2]])
 }
 ## Observed values
-rhyz.ei(rhyzophora)
+rhyz.si(rhyzophora)
 ```
 
 #### Distribution of the statistics under the null hypothesis
@@ -119,7 +119,7 @@ variable between trees of the same soil type:
 
 ```{r rhyzophora resampling, results="hide"}
 rhyz.r <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
-                    statistics = rhyz.ei, stratum = rhyzophora$soil.instability,
+                    statistics = rhyz.si, stratum = rhyzophora$soil.instability,
                         cols = 2, ntrials = 1000)
 ```
 
@@ -141,9 +141,9 @@ the value distribution under the null hypothesis:
 
 ```{r rhyzophora null distributions, fig.cap="Frequency distributions of the slope of linear regressions of number of supporting roots to torque in mangrove trees, under the null hypothesis that there is not a relationship. The trees were measured at two sites, and the null hypothesis was simulated shuffling y-values (n of roots) among trees at each site. Red lines show the observed values of the slopes, and the acceptance region of the null hypothesis at 5% is in grey. Absolute values large than the observed are depicted in orange. Results from 1000 simulations. ", fig.width=7.5}
 par(mfrow=c(1,2))
-dplot(rhyz.r[1,], svalue=rhyz.ei(rhyzophora)[1], pside="Greater",
+dplot(rhyz.r[1,], svalue=rhyz.si(rhyzophora)[1], pside="Greater",
       main="Less unstable soil", xlab="Regression slope")
-dplot(rhyz.r[2,], svalue=rhyz.ei(rhyzophora)[2], pside="Greater",
+dplot(rhyz.r[2,], svalue=rhyz.si(rhyzophora)[2], pside="Greater",
       main="More unstable soil", xlab="Regression slope")
 par(mfrow=c(1,1))
 ```
@@ -153,8 +153,8 @@ The observed slopes for the two groups are out of the region of acceptance for
 the one-tailed null hypothesis [^2] at 5% significance level.
 
 ```{r rhyzophora test}
-sum(rhyz.r[1,] >= rhyz.ei(rhyzophora)[1])/1000 < 0.05
-sum(rhyz.r[2,] >= rhyz.ei(rhyzophora)[2])/1000 < 0.05
+sum(rhyz.r[1,] >= rhyz.si(rhyzophora)[1])/1000 < 0.05
+sum(rhyz.r[2,] >= rhyz.si(rhyzophora)[2])/1000 < 0.05
 ```
 
 **Conclusion:** the null hypothesis is rejected (p < 0,05) at both cases.
@@ -175,7 +175,7 @@ Our statistic of interest is the difference between slopes, which
 seems small:
 
 ```{r rhyzophora diff between slopes}
-rhyz.ei2 <- function(dataframe){
+rhyz.si2 <- function(dataframe){
     m1 <- lm(n.roots ~ canopy.trunk, data=dataframe,
              subset=soil.instability=="medium")
     m2 <- lm(n.roots ~ canopy.trunk, data=dataframe,
@@ -184,7 +184,7 @@ rhyz.ei2 <- function(dataframe){
 }
 
 ## Observed values
-rhyz.ei2(rhyzophora)
+rhyz.si2(rhyzophora)
 ```
 #### Null hypothesis simulation 
 We simulate our new null hypothesis shuffling the trees
@@ -192,7 +192,7 @@ between soil types:
 
 ```{r rhyzophora resampling slopes, results="hide"}
 rhyz.r2 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
-                    statistics = rhyz.ei2,
+                    statistics = rhyz.si2,
                         cols = 1, ntrials = 1000)
 ```
 
@@ -201,7 +201,7 @@ rhyz.r2 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
 In this case, we cannot reject the null hypothesis at the 5% significance level:
 
 ```{r rhyzophora 2nd test}
-sum(rhyz.r2 > rhyz.ei2(rhyzophora))/1000 < 0.05
+sum(rhyz.r2 > rhyz.si2(rhyzophora))/1000 < 0.05
 ```
 
 ### Comparing intercepts
@@ -272,13 +272,13 @@ means of the residual of trees at each soil type.
 The residuals are calculated from the regression applied to all data:
 
 ```{r statistics of interest 3 rhyzophora}
-rhyz.ei3 <- function(dataframe){
+rhyz.si3 <- function(dataframe){
     m1 <- lm(n.roots ~ canopy.trunk, data=dataframe)
     res.media <- tapply(resid(m1), dataframe$soil.instability, mean)
     res.media[[1]] - res.media[[2]]
 }
 ## Observed values
-rhyz.ei3(rhyzophora)
+rhyz.si3(rhyzophora)
 ```
 
 #### Simulating the null hypothesis
@@ -288,7 +288,7 @@ the trees between soil types (first row of the data table)
 
 ```{r rhyzophora resampling intercept, results="hide"}
 rhyz.r3 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
-                    statistics = rhyz.ei3,
+                    statistics = rhyz.si3,
                         cols = 1, ntrials = 1000)
 ```
 
@@ -297,7 +297,7 @@ rhyz.r3 <- Rsampling(type = "normal_rand", dataframe = rhyzophora,
 In this case we reject the null hypothesis:
 
 ```{r rhyzophora 3rd test}
-sum(rhyz.r3 > rhyz.ei3(rhyzophora))/1000 < 0.05
+sum(rhyz.r3 > rhyz.si3(rhyzophora))/1000 < 0.05
 ```
 
 Therefore, there is one intercept for each soil type.
