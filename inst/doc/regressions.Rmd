@@ -8,7 +8,7 @@ output:
     fig_height: 5
     fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{Regression and ANOVA}
+  %\VignetteIndexEntry{Regression and ANCOVA}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---

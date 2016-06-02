@@ -25,7 +25,7 @@ set.seed(42)
 ## Overview
 
 This guide is an introduction to the **Rsampling** package, which replicates in R the functions
-of the *Resampling Stats* add-in for Excell.
+of the *Resampling Stats* add-in for Excel.
 (http://www.resample.com/) [^1].
 
 These functions are used in a workflow that summarizes the logic
@@ -37,11 +37,11 @@ behind significance tests:
 4. If the probability of the observed statistic of interest occurring under
 null hypothesis is lower than a critical value, reject the null hypothesis.
 
-*Resampling Stats* 's main idea is to facilitate the understanding of this logic,
+*Resampling Stats*'s main idea is to facilitate the understanding of this logic,
 by making the user execute each step in a spreadsheet, with the aid of
 some macros.
 
-**Rsampling** 's package aims at enabling this same training process
+**Rsampling**'s package aims at enabling this same training process
 in R. Keeping the original workflow is favored over performance.
 
 
@@ -158,7 +158,7 @@ the null hypothesis if the probability of
 the statistic of interest under the null hypothesis
 is under 5% (p < 0.05).
 
-The area not highlighted in gray marks the the top 5%
+The area not highlighted in gray marks the top 5%
 of the statistic distribution under the null hypothesis.
 Thus, if the observed statistic is in the gray area we do not reject
 the null hypothesis. This is called the *acceptance region* of H0.
@@ -504,7 +504,7 @@ To learn more about this data set refer to the help page (`?pielou`).
 There are several instances with zero frequency.
 We'll simulate a null hypothesis assuming
 these frequencies are structural, that is, assuming that
-zeroes indicates insect-plant associations that can not occur.
+zeros indicates insect-plant associations that can not occur.
 This can be a reasonable assumption for phytophagous insects, that
 are in general highly specialized in some host plants.
 
@@ -557,7 +557,7 @@ of each species of aphids among the plants. Thus we simulate a situation where w
 kept the observed aggregation of records per plant species. But by shuffling records in each
 row of the data frame we simulate that these records are independent
 Furthermore, we use the `fix.zeroes = TRUE` option to indicate that zero values are not
-to be shuffled. In doing this we assume that zeroes indicate associations that can not occur.
+to be shuffled. In doing this we assume that zeros indicate associations that can not occur.
 
 ```{r pielou randomization, results="hide"}
 pielou.r1 <- Rsampling(type = "within_rows", dataframe = pielou,

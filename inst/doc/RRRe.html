@@ -77,7 +77,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <div id="overview" class="section level2">
 <h2>Overview</h2>
-<p>This guide is an introduction to the <strong>Rsampling</strong> package, which replicates in R the functions of the <em>Resampling Stats</em> add-in for Excell. (<a href="http://www.resample.com/" class="uri">http://www.resample.com/</a>) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<p>This guide is an introduction to the <strong>Rsampling</strong> package, which replicates in R the functions of the <em>Resampling Stats</em> add-in for Excel. (<a href="http://www.resample.com/" class="uri">http://www.resample.com/</a>) <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
 <p>These functions are used in a workflow that summarizes the logic behind significance tests:</p>
 <ol style="list-style-type: decimal">
 <li>Define a statistic of interest;</li>
@@ -85,8 +85,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Get the statistic of interest distribution under null hypothesis;</li>
 <li>If the probability of the observed statistic of interest occurring under null hypothesis is lower than a critical value, reject the null hypothesis.</li>
 </ol>
-<p><em>Resampling Stats</em> ’s main idea is to facilitate the understanding of this logic, by making the user execute each step in a spreadsheet, with the aid of some macros.</p>
-<p><strong>Rsampling</strong> ’s package aims at enabling this same training process in R. Keeping the original workflow is favored over performance.</p>
+<p><em>Resampling Stats</em>’s main idea is to facilitate the understanding of this logic, by making the user execute each step in a spreadsheet, with the aid of some macros.</p>
+<p><strong>Rsampling</strong>’s package aims at enabling this same training process in R. Keeping the original workflow is favored over performance.</p>
 <p>The sections following installation instructions are examples of the simpler and most common applications of <strong>Rsampling</strong>. You may refer to the package help pages to learn about all other functionalities.</p>
 </div>
 <div id="installation" class="section level2">
@@ -164,7 +164,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="decision-should-we-reject-the-null-hypothesis" class="section level3">
 <h3>Decision: should we reject the null hypothesis?</h3>
 <p>As usual in the biological sciences, we adopt the criteria of rejecting the null hypothesis if the probability of the statistic of interest under the null hypothesis is under 5% (p &lt; 0.05).</p>
-<p>The area not highlighted in gray marks the the top 5% of the statistic distribution under the null hypothesis. Thus, if the observed statistic is in the gray area we do not reject the null hypothesis. This is called the <em>acceptance region</em> of H0. As the observed value (red line) is outside the acceptance region, H0 can be rejected. You can also check this with a logical test in R:</p>
+<p>The area not highlighted in gray marks the top 5% of the statistic distribution under the null hypothesis. Thus, if the observed statistic is in the gray area we do not reject the null hypothesis. This is called the <em>acceptance region</em> of H0. As the observed value (red line) is outside the acceptance region, H0 can be rejected. You can also check this with a logical test in R:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span><span class="kw">sum</span>(emb.r &gt;=<span class="st"> </span><span class="kw">emb.si</span>(embauba))/<span class="dv">1000</span> &lt;<span class="st"> </span><span class="fl">0.05</span>
 [<span class="dv">1</span>] <span class="ot">TRUE</span></code></pre></div>
 <p><strong>Conclusion:</strong> we reject the null hypothesis (p &lt; 0.05).</p>
@@ -427,7 +427,7 @@ lanceolatus               <span class="dv">1</span>
 macgillivrayae            <span class="dv">0</span>
 erigeronensis             <span class="dv">0</span>
 solirostratus             <span class="dv">0</span></code></pre></div>
-<p>To learn more about this data set refer to the help page (<code>?pielou</code>). There are several instances with zero frequency. We’ll simulate a null hypothesis assuming these frequencies are structural, that is, assuming that zeroes indicates insect-plant associations that can not occur. This can be a reasonable assumption for phytophagous insects, that are in general highly specialized in some host plants.</p>
+<p>To learn more about this data set refer to the help page (<code>?pielou</code>). There are several instances with zero frequency. We’ll simulate a null hypothesis assuming these frequencies are structural, that is, assuming that zeros indicates insect-plant associations that can not occur. This can be a reasonable assumption for phytophagous insects, that are in general highly specialized in some host plants.</p>
 <div id="study-hypothesis-3" class="section level3">
 <h3>Study Hypothesis</h3>
 <p>Our research hypothesis is that there is or there was resource partitioning of resources among aphid species. In this case, the observed associations should have resulted in decreased insect niche overlap.</p>
@@ -454,7 +454,7 @@ solirostratus             <span class="dv">0</span></code></pre></div>
 </div>
 <div id="distribution-of-the-statistic-of-interest-under-the-null-hypothesis-1" class="section level3">
 <h3>Distribution of the statistic of interest under the null hypothesis</h3>
-<p>To simulate our null hypothesis, we shuffle the numbers of records of each species of aphids among the plants. Thus we simulate a situation where we kept the observed aggregation of records per plant species. But by shuffling records in each row of the data frame we simulate that these records are independent Furthermore, we use the <code>fix.zeroes = TRUE</code> option to indicate that zero values are not to be shuffled. In doing this we assume that zeroes indicate associations that can not occur.</p>
+<p>To simulate our null hypothesis, we shuffle the numbers of records of each species of aphids among the plants. Thus we simulate a situation where we kept the observed aggregation of records per plant species. But by shuffling records in each row of the data frame we simulate that these records are independent Furthermore, we use the <code>fix.zeroes = TRUE</code> option to indicate that zero values are not to be shuffled. In doing this we assume that zeros indicate associations that can not occur.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">&gt;<span class="st"> </span>pielou.r1 &lt;-<span class="st"> </span><span class="kw">Rsampling</span>(<span class="dt">type =</span> <span class="st">&quot;within_rows&quot;</span>, <span class="dt">dataframe =</span> pielou,
 +<span class="st">                    </span><span class="dt">statistics =</span> pielou.si, <span class="dt">ntrials =</span> <span class="dv">1000</span>, <span class="dt">fix.zeroes =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>The observed value is greater than most values in the null distribution. As our hypothesis is one-tailed (overlapping observed lower than expected by chance) the observed value is in the null region of acceptance.</p>
