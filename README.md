@@ -1,7 +1,7 @@
 # Rsampling - Resampling Stats functions ported to R
 
-[![Travis-CI Build Status](https://travis-ci.org/diogro/Rsampling.svg?branch=master)](https://travis-ci.org/diogro/Rsampling)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/diogro/Rsampling?branch=master&svg=true)](https://ci.appveyor.com/project/diogro/Rsampling)
+[![Travis-CI Build Status](https://travis-ci.org/lageIBUSP/Rsampling.svg?branch=master)](https://travis-ci.org/lageIBUSP/Rsampling)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/lageIBUSP/Rsampling?branch=master&svg=true)](https://ci.appveyor.com/project/lageIBUSP/Rsampling)
 
 Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excel worksheets.
 It adopts a simple workflow for significance tests:
