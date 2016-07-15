@@ -4,8 +4,7 @@
 \alias{splot}
 \title{Spaghetti plot}
 \usage{
-splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"),
-  groups.names = c(1, 2), ...)
+splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"), ...)
 }
 \arguments{
 \item{p1, p2}{vectors of paired values (numerical vectors)}
@@ -14,9 +13,7 @@ splot(p1, p2, highlight = TRUE, col.dif = c("black", "grey"),
 
 \item{col.dif}{color vector if \code{highlight = TRUE}}
 
-\item{groups.names}{labels for the groups names; numeric or character vector of length two.}
-
-\item{...}{further arguments to be passed to \code{plot} function.}
+\item{...}{further arguments to be passed to plotting function (\code{stripchart}).}
 }
 \description{
 Quick plot of paired differences, for exploratory purposes.
