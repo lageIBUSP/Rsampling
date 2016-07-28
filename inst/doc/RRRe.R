@@ -49,7 +49,7 @@ summary(azteca)
 
 ## ----pairplot azteca, fig.cap = "Number ants that were recruited by aqueous extracts of young and old leaves of *Cecropia* trees. The extracts were dropped in paired leaves of *Cecropia* trees that had colonies of *Azteca* ants. The lines link leaves of same experimental pair."----
 splot(azteca$extract.new, azteca$extract.old,
-           groups.names=c("Young leaves","Old leaves"),
+           group.name=c("Young leaves","Old leaves"),
            ylab="Number of recruited ants",
            xlab="Extract type")
 

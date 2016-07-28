@@ -49,7 +49,7 @@ summary(azteca)
 
 ## ----pairplot azteca, fig.cap = "Número de formigas recrutadas por extratos de folhas novas e velhas de embaúbas. Os extratos foram aplicados em pares de folhas próximas em embaúbas que tinham colônias de formigas. As linhas ligam folhas do mesmo par experimental."----
 splot(azteca$extract.new, azteca$extract.old,
-           groups.names=c("Folha nova","Folha velha"),
+           group.name=c("Folha nova","Folha velha"),
            ylab="N de formigas recrutadas",
            xlab="Tipo de extrato aplicado")
 
