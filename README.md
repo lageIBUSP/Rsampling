@@ -2,6 +2,7 @@
 
 [![Travis-CI Build Status](https://travis-ci.org/lageIBUSP/Rsampling.svg?branch=master)](https://travis-ci.org/lageIBUSP/Rsampling)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/lageIBUSP/Rsampling?branch=master&svg=true)](https://ci.appveyor.com/project/lageIBUSP/Rsampling)
+[![CRAN Status](https://img.shields.io/cran/v/Rsampling.svg)](https://cran.r-project.org/package=Rsampling)
 
 Resampling Stats (http://www.resample.com) is an add-in for running randomization tests in Excel worksheets.
 It adopts a simple workflow for significance tests:
@@ -30,8 +31,6 @@ Or, for the latest development snapshot:
 library(devtools)
 install_github(repo = 'lageIBUSP/Rsampling')
 ```
-
-
 
 ## See also
 
